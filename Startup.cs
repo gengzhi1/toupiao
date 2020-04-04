@@ -24,19 +24,53 @@ namespace toupiao
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add 
+        // services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            
+            services.AddDefaultIdentity<IdentityUser>(
+                    // 验证用户才能登录
+                    options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<IdentityOptions>(
+                options =>
+                {
+                // Default Password settings.
+                options.Password.RequireDigit = true;
+                // 需要小写
+                options.Password.RequireLowercase = true;
+                // 需要符号
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                // 不能全部相同
+                options.Password.RequiredUniqueChars = 1;
+                });
+
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default User settings.
+                // 允许用户名为中文
+                options.User.AllowedUserNameCharacters = null;
+                // 邮箱的唯一性
+                options.User.RequireUniqueEmail = false;
+
+            });
+
             services.AddControllersWithViews();
-           services.AddRazorPages();
+            
+            services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure
+        //  the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -47,7 +81,9 @@ namespace toupiao
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // The default HSTS value is 30 days. You may want to change
+                //  this for production scenarios, 
+                // see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
