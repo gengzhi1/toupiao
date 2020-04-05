@@ -30,28 +30,15 @@ namespace toupiao
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
+                    // Configuration["ConnectionStrings:DefaultConnection"]
                     Configuration.GetConnectionString("DefaultConnection")));
+
             
             services.AddDefaultIdentity<IdentityUser>(
                     // 验证用户才能登录
                     options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.Configure<IdentityOptions>(
-                options =>
-                {
-                // Default Password settings.
-                options.Password.RequireDigit = true;
-                // 需要小写
-                options.Password.RequireLowercase = true;
-                // 需要符号
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                // 不能全部相同
-                options.Password.RequiredUniqueChars = 1;
-                });
 
 
             services.Configure<IdentityOptions>(options =>

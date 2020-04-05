@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using toupiao.Services;
 
 namespace toupiao.Areas.Identity.Pages.Account
 {
@@ -23,17 +25,21 @@ namespace toupiao.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration ;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
+            IConfiguration configuration,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _configuration = configuration;
+
         }
 
         [BindProperty]
@@ -54,7 +60,10 @@ namespace toupiao.Areas.Identity.Pages.Account
             [StringLength(100, 
                 ErrorMessage = "{0}最小为{2}个字符，最多为{1}个字符。", 
                 MinimumLength = 6)]
-            [DataType(DataType.Password)]
+            [DataType(DataType.Password )]
+            [RegularExpression(
+                @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}", 
+                ErrorMessage="密码要有数字字母（含大小写）和字符哦！ 亲! 幸苦点为了安全")]
             [Display(Name = "密码")]
             public string Password { get; set; }
 
@@ -90,8 +99,11 @@ namespace toupiao.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await ToupiaoEmailSender.SendEmailAnync(
+                        _configuration :_configuration,
+                        sendTo:Input.Email, 
+                        sendSubject:"Confirm your email",
+                        sendBody:$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

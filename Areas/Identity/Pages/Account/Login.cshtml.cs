@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using Microsoft.Extensions.Localization;
+using toupiao.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace toupiao.Areas.Identity.Pages.Account
 {
@@ -20,14 +25,17 @@ namespace toupiao.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IConfiguration _configuration;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
+            IConfiguration configuration,
             UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -44,13 +52,15 @@ namespace toupiao.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
+            [Display(Name="电子邮箱")]
             public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name="密码")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "记住我?")]
             public bool RememberMe { get; set; }
         }
 
@@ -77,6 +87,42 @@ namespace toupiao.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                var _user = await _userManager.FindByEmailAsync(Input.Email);
+                if (_user == null)
+                {
+                    //如果没有用户为空就跳转到注册界面  Redirect—跳转  
+                    //ToPage—注册界面（register。cshtml)
+                    return RedirectToPage("Register", new { IsFromLogin = true, returnUrl });
+                }
+
+                // 如果用户的电子邮件没有被验证
+                if (! await _userManager.IsEmailConfirmedAsync(_user))
+                {
+                    // 回调值 生成链接参数
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(_user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                    // 确认邮箱的链接
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = _user.Id, code = code },
+                        protocol: Request.Scheme);
+                    
+                    await ToupiaoEmailSender.SendEmailAnync(
+                        _configuration,
+                        Input.Email, 
+                        "Confirm your email",
+                        
+                        "验证电子邮件吗？ 点击 <a href='" + HtmlEncoder.Default.Encode(callbackUrl) +"'>验证邮件</a>");
+
+                    //     添加错误
+                    ModelState.AddModelError(string.Empty, "我们已经发送电子邮件到你的邮箱了， 快去验证吧！");
+
+                    return Page();
+                }
+
+                
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
