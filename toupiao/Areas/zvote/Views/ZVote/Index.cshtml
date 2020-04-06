@@ -1,7 +1,9 @@
 @model IEnumerable<toupiao.Areas.zvote.Models.ZVote>
+@using toupiao.Areas.zvote.Models
 
 @{
     ViewData["Title"] = "Index";
+    var ItemTypes = Html.GetEnumSelectList<ItemTypeEnum>().ToList();
 }
 
 <h1>你的所有的投票</h1>
@@ -38,17 +40,17 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DOCreating)
+                    @(item.DOCreating.LocalDateTime)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DOStart)
+                    @( item.DOStart?.LocalDateTime)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.IsSaveOnly)
                 </td>
                 <td>
-                    @( Model.First().ItemTypes
-                    .FirstOrDefault(p => p.Value == item.ItemType).Text)
+                    @( ItemTypes.FirstOrDefault(
+                        p=>p.Value == item.ItemType).Text )
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">更改</a> |

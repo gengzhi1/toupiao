@@ -35,7 +35,6 @@ namespace toupiao.Areas.zvote.Controllers
             var _zVote = await _context.ZVote.Where(p=>p.Submitter == _user)
                     .ToListAsync();
 
-            _zVote.First().ItemTypes = ZVoteMix.GetItemTypes();
 
             return View( _zVote );
         }
@@ -64,7 +63,6 @@ namespace toupiao.Areas.zvote.Controllers
         {
             var _zvote = new ZVote()
             {
-                ItemTypes = ZVoteMix.GetItemTypes(),
                 DOStart = DateTimeOffset.Now
             };
             TempData[nameof(_zvote.DOStart)] = _zvote.DOStart?
@@ -80,7 +78,8 @@ namespace toupiao.Areas.zvote.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Title,Description,DOEnd,DOStart,IsSaveOnly,ItemType")] 
+            [Bind("Id,Title,Description,DOEnd,DOStart,IsSaveOnly,ItemType,"+
+            "MaxItemCountpu")] 
             ZVote zVote
             )
         {
@@ -102,7 +101,6 @@ namespace toupiao.Areas.zvote.Controllers
 
             }
 
-            zVote.ItemTypes = ZVoteMix.GetItemTypes();
             return View(zVote);
         }
 

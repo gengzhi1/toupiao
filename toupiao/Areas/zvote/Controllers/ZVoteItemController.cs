@@ -45,22 +45,21 @@ namespace toupiao.Areas.zvote.Controllers
         }
 
         // GET: zvote/ZVoteItem/Create/Id
-        public IActionResult Create(ZVote zVote)
+        public IActionResult Create(Guid Id)
         {
-            Console.WriteLine(zVote);
-            var _zVoteItem = new ZVoteItem()
-            {
-                ForZVote = zVote
-            };
-            return View(_zVoteItem);
+            TempData[nameof(ZVoteItem.ZlVote)] = Id;
+            return View();
         }
 
         // POST: zvote/ZVoteItem/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties 
+        // you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ItemSource,Description")] ZVoteItem zVoteItem)
+        public async Task<IActionResult> Create(
+            [Bind("Id,Content,Description")] 
+            ZVoteItem zVoteItem)
         {
             if (ModelState.IsValid)
             {
@@ -89,11 +88,15 @@ namespace toupiao.Areas.zvote.Controllers
         }
 
         // POST: zvote/ZVoteItem/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties
+        // you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,ItemSource,Description")] ZVoteItem zVoteItem)
+        public async Task<IActionResult> Edit(
+            Guid id, 
+            [Bind("Id,Content,Description")] 
+            ZVoteItem zVoteItem)
         {
             if (id != zVoteItem.Id)
             {

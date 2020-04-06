@@ -40,7 +40,7 @@ namespace toupiao.Areas.zvote.Models
         [Display(Name = "创建者")]
         public IdentityUser Submitter{get;set;}
 
-        [Display(Name = "仅保存,不发布")]
+        [Display(Name = "仅保存")]
         public bool IsSaveOnly{get; set;} = false;
 
         [Display(Name = "描述")]
@@ -49,19 +49,23 @@ namespace toupiao.Areas.zvote.Models
             MinimumLength = 5)]
         public string Description { get; set; }
 
-        [Display(Name = "投票类型")]
+        [Display(Name = "类型")]
         public String ItemType{ get;set;}
 
-        [NotMapped]
-        public List<SelectListItem> ItemTypes { get; set; }
+        // Max vote iten count for per user
+        [Display(Name = "投几项?")]
+        public Int32 MaxItemCountpu { get; set; } = 1;
+
     }
 
     // 投票项
     public class ZVoteItem
     {
         public Guid Id{ get;set;}
-        public ZVote ForZVote{ get;set;}
-        public string ItemSource{ get;set;}
+
+        [ForeignKey("ZVote")]
+        public ZVote ZlVote { get;set;}
+        public string Content{ get;set;}
         public string Description{ get;set;}
     }
 

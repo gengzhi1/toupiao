@@ -1,4 +1,5 @@
 @model toupiao.Areas.zvote.Models.ZVote
+@using toupiao.Areas.zvote.Models
 
 @{
     ViewData["Title"] = "Create";
@@ -44,10 +45,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="DOEnd" class="control-label"></label>
-                <input asp-for="DOEnd" hidden/>
+                <input asp-for="DOEnd" hidden />
                 <div class="row">
                     <div class="col col-6 ">
-                        <input type="date" class="form-control d-o-end-date"/>
+                        <input type="date" class="form-control d-o-end-date" />
                     </div>
                     <div class="col col-6 ">
                         <input type="time" class="form-control d-o-end-time" />
@@ -57,9 +58,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="ItemType" class="control-label"></label>
-                <select asp-for="ItemType" asp-items="Model.ItemTypes"
+                <select asp-for="ItemType" 
+                        asp-items="Html.GetEnumSelectList<ItemTypeEnum>()"
                         class="form-control"></select>
                 <span asp-validation-for="ItemType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MaxItemCountpu" class="control-label"></label>
+                <input asp-for="MaxItemCountpu" class="form-control"/>
+                <span asp-validation-for="MaxItemCountpu" class="text-danger">
+                </span>
             </div>
 
             <div class="form-group form-check">
@@ -72,7 +81,7 @@
             <div class="form-group">
 
                 <a asp-action="Index" class="btn btn-info">&laquo; 返回</a>
-                <input type="submit" class="zl-form-input" hidden/>
+                <input type="submit" class="zl-form-input" hidden />
                 <a class="btn btn-primary zlsubmit">添加投票项&raquo;</a>
             </div>
         </form>
@@ -100,9 +109,8 @@
             (event) => {
 
                 var end_datetime = $('.d-o-end-date').val() + "T"
-                    + $('.d-o-end-time').val();
+                    + ($('.d-o-end-time').val() || '00:00');
 
-                console.log(end_datetime);
 
                 // 结束时间要大于开始时间
                 is_form_valid = ((
@@ -110,7 +118,6 @@
                     // 结束时间要大于现在
                     (new Date() < new Date(end_datetime)));
 
-                console.log(is_form_valid);
 
                 if (!is_form_valid) {
                     zlalert('没开始就结束的投票是没有的! 要有信心! 加油!');
