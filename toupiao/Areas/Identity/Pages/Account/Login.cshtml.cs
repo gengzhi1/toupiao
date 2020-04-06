@@ -55,13 +55,15 @@ namespace toupiao.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
+            [Display(Name ="ÓÊÏä")]
             public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name ="ÃÜÂë")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "¼Ç×¡ÎÒ?")]
             public bool RememberMe { get; set; }
         }
 

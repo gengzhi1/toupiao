@@ -1,13 +1,24 @@
 @page
 @model RegisterModel
 @{
-    ViewData["Title"] = "欢迎来到注册界面";
+    ViewData["Title"] = "注册";
 }
 
-<h1>@ViewData["Title"]</h1>
+@section Styles
+{
+<style>
+    .renderbody {
+        background: url(/img/customer.jpg) no-repeat center 0px;
+        background-size: cover;
+    }
+
+</style>
+}
+
+<h1>我们一直在乎你的投票</h1>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="offset-md-4 col-md-4 text-center">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h4>注册账号.</h4>
             <hr />
@@ -26,7 +37,7 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">欢迎来到注册界面</button>
+            <button type="submit" class="btn btn-info btn-lg">臧林投票带你开始新生活</button>
         </form>
     </div>
     

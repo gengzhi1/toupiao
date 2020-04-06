@@ -1,5 +1,7 @@
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,19 +9,49 @@ using Microsoft.Extensions.Localization;
 
 namespace toupiao.Areas.zvote.Models
 {
+    // 投票类
+
     public class ZVote
     {
         public Guid Id{ get; set;}
-        public String Title{ get; set;}
+
+        [Display(Name="标题")]
+        public string Title{ get; set;}
+
+        // Date Of Creating
+        [Display(Name="创建时间")]
+        [DataType(DataType.Date)]
         public DateTimeOffset DOCreating { get; set; } = DateTimeOffset.Now;
+
+
+        // Date Of Start
+        // 默认为立即开始
+        [Display(Name = "投票起始")]
+        [DataType(DataType.Date)]
+        public DateTimeOffset? DOStart { get; set; } = DateTimeOffset.Now;
+
+        [Display(Name="投票截至")]
+        [DataType(DataType.Date)]
         public DateTimeOffset DOEnd{ get; set;} 
             = DateTimeOffset.Now.AddDays(1);
-        
+            
+        [Display(Name = "创建者")]
         public IdentityUser Submitter{get;set;}
+
+        [Display(Name = "仅保存,不发布")]
         public bool IsSaveOnly{get; set;} = false;
+
+        [Display(Name = "描述")]
+        public string Description { get; set; }
+
+        [Display(Name = "投票类型")]
         public String ItemType{ get;set;}
+
+        [NotMapped]
+        public List<SelectListItem> ItemTypes { get; set; }
     }
 
+    // 投票项
     public class ZVoteItem
     {
         public Guid Id{ get;set;}
@@ -28,12 +60,4 @@ namespace toupiao.Areas.zvote.Models
         public string Description{ get;set;}
     }
 
-    public class ZVoteMix
-    {
-        public SelectList ItemTypes(IStringLocalizer<Program> _localizer) => 
-            new SelectList( new[]{
-                new SelectListItem{ Value = "0", Text = _localizer["Text"] },
-                new SelectListItem{ Value = "1", Text = _localizer["Image"] },
-            });
-    }
 }

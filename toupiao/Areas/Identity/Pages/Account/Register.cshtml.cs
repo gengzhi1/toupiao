@@ -53,7 +53,7 @@ namespace toupiao.Areas.Identity.Pages.Account
         {
             [Required(ErrorMessage="必须填写邮箱")]
             [EmailAddress(ErrorMessage="你还输入的不是邮箱")]
-            [Display(Name = "Email")]
+            [Display(Name = "电子邮件")]
             public string Email { get; set; }
 
             [Required(ErrorMessage="请输入密码")]
@@ -61,12 +61,11 @@ namespace toupiao.Areas.Identity.Pages.Account
                 ErrorMessage = "{0}最小为{2}个字符，最多为{1}个字符。", 
                 MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "密码")]
             [RegularExpression(
-                @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])"+
-                @"[A-Za-z\d$@$!%*?&]{6,}",
-                ErrorMessage = "The password required digit, lowercase, "+
-                "uppercase and nonalphanumeric")]
+                @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&_])"+
+                @"[A-Za-z\d$@$!%*?&_]{6,}",
+                ErrorMessage = "密码要有数字大小写和字符(@$!%*?&_), 6位以上哦!")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]

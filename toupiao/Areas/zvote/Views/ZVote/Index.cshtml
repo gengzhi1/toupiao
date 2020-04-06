@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>你的所有的投票</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">新的投票</a>
 </p>
 <table class="table">
     <thead>
@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DOCreating)
+                @Html.DisplayNameFor(model => model.DOStart)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DOEnd)
@@ -40,18 +40,19 @@
                 @Html.DisplayFor(modelItem => item.DOCreating)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DOEnd)
+                @Html.DisplayFor(modelItem => item.DOStart)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsSaveOnly)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ItemType)
+                @( Model.First().ItemTypes
+                    .FirstOrDefault(p => p.Value == item.ItemType).Text)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">更改</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">查看</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
             </td>
         </tr>
 }

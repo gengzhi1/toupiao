@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,19 +13,31 @@ using toupiao.Data;
 namespace toupiao.Areas.zvote.Controllers
 {
     [Area("zvote")]
+    [Authorize]
     public class ZVoteController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ZVoteController(ApplicationDbContext context)
+        public ZVoteController(
+            UserManager<IdentityUser> userManager,
+            ApplicationDbContext context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: zvote/ZVote
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ZVote.ToListAsync());
+            var _user = await _userManager.GetUserAsync(User);
+            
+            var _zVote = await _context.ZVote.Where(p=>p.Submitter == _user)
+                    .ToListAsync();
+
+            _zVote.First().ItemTypes = ZVoteMix.GetItemTypes();
+
+            return View( _zVote );
         }
 
         // GET: zvote/ZVote/Details/5
@@ -45,21 +59,38 @@ namespace toupiao.Areas.zvote.Controllers
         }
 
         // GET: zvote/ZVote/Create
-        public IActionResult Create()
+        [ActionName("Create")]
+        public IActionResult XinJian()
         {
-            return View();
+            var _zvote = new ZVote()
+            {
+                ItemTypes = ZVoteMix.GetItemTypes(),
+                DOStart = DateTimeOffset.Now
+            };
+            TempData[nameof(_zvote.DOStart)] = _zvote.DOStart?
+                .ToUnixTimeMilliseconds().ToString();
+
+            return View( _zvote );
         }
 
         // POST: zvote/ZVote/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties 
+        //  you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,DOCreating,DOEnd,IsSaveOnly,ItemType")] ZVote zVote)
+        public async Task<IActionResult> Create(
+            [Bind("Id,Title,Descript,DOEnd,DOStart,IsSaveOnly,ItemType")] 
+            ZVote zVote
+            )
         {
             if (ModelState.IsValid)
             {
+
+                zVote.Submitter = await _userManager.GetUserAsync(User);
+                zVote.DOCreating = DateTimeOffset.Now;
                 zVote.Id = Guid.NewGuid();
+
                 _context.Add(zVote);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
