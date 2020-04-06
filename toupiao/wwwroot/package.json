@@ -1,0 +1,17 @@
+{
+  "name": "zl",
+  "version": "1.0.0",
+  "description": "The Zl static",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-cookie": "^2.2.1"
+  }
+}

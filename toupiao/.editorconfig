@@ -1,0 +1,9 @@
+﻿
+# All files
+[*]
+guidelines = 80
+
+
+[*.{cs,vb}]
+# ARGB color format (red with 25% opacity)
+guidelines_style = 2.5px solid #ff00ff
