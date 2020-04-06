@@ -11,7 +11,7 @@
         <h1>新的投票</h1>
         <h4>在这里产生。</h4>
 
-        <form asp-action="Create">
+        <form asp-action="Create" id="zvote_create_form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -20,7 +20,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"
+                <textarea asp-for="Description"
+                          class="form-control"
                           rows="5"></textarea>
 
                 <span asp-validation-for="Description"
@@ -29,13 +30,29 @@
 
             <div class="form-group">
                 <label asp-for="DOStart" class="control-label"></label>
-                <span>(默认为立即发布)</span>
-                <input asp-for="DOStart" class="form-control" />
+                <span class="text-info">(默认为立即发布)</span>
+                <input asp-for="DOStart" hidden />
+                <div class="row">
+                    <div class="col col-6 ">
+                        <input type="date" class="form-control d-o-start-date" />
+                    </div>
+                    <div class="col col-6 ">
+                        <input type="time" class="form-control d-o-start-time" />
+                    </div>
+                </div>
                 <span asp-validation-for="DOStart" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DOEnd" class="control-label"></label>
-                <input asp-for="DOEnd" class="form-control" />
+                <input asp-for="DOEnd" hidden/>
+                <div class="row">
+                    <div class="col col-6 ">
+                        <input type="date" class="form-control d-o-end-date"/>
+                    </div>
+                    <div class="col col-6 ">
+                        <input type="time" class="form-control d-o-end-time" />
+                    </div>
+                </div>
                 <span asp-validation-for="DOEnd" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,12 +72,63 @@
             <div class="form-group">
 
                 <a asp-action="Index" class="btn btn-info">&laquo; 返回</a>
-                <input type="submit" value="添加投票项>>" class="btn btn-primary" />
+                <input type="submit" class="zl-form-input" hidden/>
+                <a class="btn btn-primary zlsubmit">添加投票项&raquo;</a>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts
-{ 
+{
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        var is_form_valid = true;
+
+        $(document).on('change', '.d-o-start-date,.d-o-start-time',
+            (event) => {
+
+                $('#DOStart').val(
+                    $('.d-o-start-date').val() + "T" +
+                    ($('.d-o-start-time').val()||'00:00')
+                );
+            });
+
+        $(document).on('change', '.d-o-end-date,.d-o-end-time',
+            (event) => {
+
+                var end_datetime = $('.d-o-end-date').val() + "T"
+                    + $('.d-o-end-time').val();
+
+                console.log(end_datetime);
+
+                // 结束时间要大于开始时间
+                is_form_valid = ((
+                    new Date($('#DOStart').val()) < new Date(end_datetime)) &&
+                    // 结束时间要大于现在
+                    (new Date() < new Date(end_datetime)));
+
+                console.log(is_form_valid);
+
+                if (!is_form_valid) {
+                    zlalert('没开始就结束的投票是没有的! 要有信心! 加油!');
+                } else {
+                    $('#DOEnd').val(end_datetime);
+                }
+        });
+
+        $(document).on('click', '.zlsubmit', (event) => {
+            // 防止默认事件(提交)被触发
+            event.preventDefault();
+
+            if (is_form_valid) {
+                $('.zl-form-input').click();
+            }
+            else {
+                zlalert('填写有误, 好好检查下吧!');
+            }
+        });
+    </script>
 }

@@ -69,3 +69,18 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+
+
+
+
+/*/////////////////////////////////////////////////////////////////////////*/
+
+
+.alert {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    z-index:99;
+}

@@ -44,10 +44,15 @@ namespace toupiao.Areas.zvote.Controllers
             return View(zVoteItem);
         }
 
-        // GET: zvote/ZVoteItem/Create
-        public IActionResult Create()
+        // GET: zvote/ZVoteItem/Create/Id
+        public IActionResult Create(ZVote zVote)
         {
-            return View();
+            Console.WriteLine(zVote);
+            var _zVoteItem = new ZVoteItem()
+            {
+                ForZVote = zVote
+            };
+            return View(_zVoteItem);
         }
 
         // POST: zvote/ZVoteItem/Create

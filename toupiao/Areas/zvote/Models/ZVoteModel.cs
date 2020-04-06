@@ -16,22 +16,24 @@ namespace toupiao.Areas.zvote.Models
         public Guid Id{ get; set;}
 
         [Display(Name="标题")]
+        [StringLength( 64,
+            ErrorMessage = "写个标题吧!({1}字以内)" , 
+            MinimumLength = 2)]
         public string Title{ get; set;}
 
         // Date Of Creating
         [Display(Name="创建时间")]
-        [DataType(DataType.Date)]
         public DateTimeOffset DOCreating { get; set; } = DateTimeOffset.Now;
 
 
         // Date Of Start
         // 默认为立即开始
         [Display(Name = "投票起始")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTimeOffset? DOStart { get; set; } = DateTimeOffset.Now;
 
         [Display(Name="投票截至")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTimeOffset DOEnd{ get; set;} 
             = DateTimeOffset.Now.AddDays(1);
             
@@ -42,6 +44,9 @@ namespace toupiao.Areas.zvote.Models
         public bool IsSaveOnly{get; set;} = false;
 
         [Display(Name = "描述")]
+        [StringLength(256,
+            ErrorMessage = "描述一下吧!({1}以内)",
+            MinimumLength = 5)]
         public string Description { get; set; }
 
         [Display(Name = "投票类型")]

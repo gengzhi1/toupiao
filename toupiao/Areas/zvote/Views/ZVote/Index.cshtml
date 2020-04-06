@@ -31,30 +31,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOCreating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOStart)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsSaveOnly)
-            </td>
-            <td>
-                @( Model.First().ItemTypes
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DOCreating)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DOStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsSaveOnly)
+                </td>
+                <td>
+                    @( Model.First().ItemTypes
                     .FirstOrDefault(p => p.Value == item.ItemType).Text)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">更改</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">查看</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">更改</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">查看</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+
+@section Scripts
+{
+
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -80,10 +80,11 @@ namespace toupiao.Areas.zvote.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Title,Descript,DOEnd,DOStart,IsSaveOnly,ItemType")] 
+            [Bind("Id,Title,Description,DOEnd,DOStart,IsSaveOnly,ItemType")] 
             ZVote zVote
             )
         {
+
             if (ModelState.IsValid)
             {
 
@@ -93,8 +94,15 @@ namespace toupiao.Areas.zvote.Controllers
 
                 _context.Add(zVote);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(
+                    nameof(ZVoteItemController.Create),
+                    nameof(ZVoteItem),
+                    zVote.Id );
+
             }
+
+            zVote.ItemTypes = ZVoteMix.GetItemTypes();
             return View(zVote);
         }
 
