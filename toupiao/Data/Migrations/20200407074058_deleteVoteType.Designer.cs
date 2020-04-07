@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using toupiao.Data;
@@ -9,9 +10,10 @@ using toupiao.Data;
 namespace toupiao.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200407074058_deleteVoteType")]
+    partial class deleteVoteType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,19 +225,17 @@ namespace toupiao.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("DOVoting")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("VoteItem")
-                        .HasColumnType("text");
-
                     b.Property<string>("VoterId")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ZVoteId")
+                    b.Property<Guid>("ZVoteItemId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("VoterId");
+
+                    b.HasIndex("ZVoteItemId");
 
                     b.ToTable("ZUserVote");
                 });
@@ -258,9 +258,6 @@ namespace toupiao.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("character varying(256)")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("IsLegal")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsSaveOnly")
                         .HasColumnType("boolean");
@@ -293,6 +290,31 @@ namespace toupiao.Data.Migrations
                     b.HasIndex("SubmitterId");
 
                     b.ToTable("ZVote");
+                });
+
+            modelBuilder.Entity("toupiao.Areas.zvote.Models.ZVoteItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageFileName")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ZVoteId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ZVoteId");
+
+                    b.ToTable("ZVoteItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -346,11 +368,33 @@ namespace toupiao.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("toupiao.Areas.zvote.Models.ZUserVote", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Voter")
+                        .WithMany()
+                        .HasForeignKey("VoterId");
+
+                    b.HasOne("toupiao.Areas.zvote.Models.ZVoteItem", "ZVoteItem")
+                        .WithMany()
+                        .HasForeignKey("ZVoteItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("toupiao.Areas.zvote.Models.ZVote", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Submitter")
                         .WithMany()
                         .HasForeignKey("SubmitterId");
+                });
+
+            modelBuilder.Entity("toupiao.Areas.zvote.Models.ZVoteItem", b =>
+                {
+                    b.HasOne("toupiao.Areas.zvote.Models.ZVote", "ZVote")
+                        .WithMany()
+                        .HasForeignKey("ZVoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

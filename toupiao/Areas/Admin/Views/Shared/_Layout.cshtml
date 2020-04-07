@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <title>@ViewData["Title"] - @Localizer["Zl Vote"]</title>
+    <title>@ViewData["后台管理"] - @Localizer["臧林投票"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
@@ -35,26 +35,20 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area=""
-                               asp-controller="Home" asp-action="Index">
-                                @Localizer["主页"]
+                            <a class="nav-link text-dark" asp-area="admin"
+                               asp-controller="ZVotes" asp-action="Index">
+                                @Localizer["管理投票"]
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="zvote"
-                               asp-controller="ZVote" asp-action="Index">
-                                @Localizer["投票"]
+                            <a class="nav-link text-dark" asp-area="admin"
+                               asp-controller="ZlUserRole" asp-action="Index">
+                                @Localizer["查看用户"]
                             </a>
                         </li>
 
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area=""
-                               asp-controller="Home" asp-action="Privacy">
-                                @Localizer["隐私"]
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>

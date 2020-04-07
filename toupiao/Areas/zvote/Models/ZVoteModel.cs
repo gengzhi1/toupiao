@@ -30,11 +30,11 @@ namespace toupiao.Areas.zvote.Models
         // Date Of Start
         // 默认为立即开始
         [Display(Name = "投票起始")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         public DateTimeOffset? DOStart { get; set; } = DateTimeOffset.Now;
 
         [Display(Name="投票截至")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         public DateTimeOffset DOEnd{ get; set;} 
             = DateTimeOffset.Now.AddDays(1);
             
@@ -50,40 +50,34 @@ namespace toupiao.Areas.zvote.Models
             MinimumLength = 5)]
         public string Description { get; set; }
 
-        [Display(Name = "类型")]
-        public String ItemType{ get;set;}
+        [StringLength(128)]
+        public string XuanxiangA { get; set; }
 
-        // Max vote iten count for per user
-        [Display(Name = "投几项?")]
-        public Int32 MaxItemCountpu { get; set; } = 1;
+
+        [StringLength(128)]
+        public string XuanxiangB { get; set; }
+
+        [StringLength(128)]
+        public string XuanxiangC { get; set; }
+
+        [StringLength(128)]
+        public string XuanxiangD { get; set; }
+
+
+        public bool IsLegal { get; set; } = false;
+
 
     }
 
-    // 投票项
-    public class ZVoteItem
-    {
-        public Guid Id{ get;set;}
-
-        [ForeignKey("ZVote")]
-        public Guid ZVoteId { get;set;}
-
-        public ZVote ZVote { get; set; }
-
-        public string Content{ get;set;}
-
-        public string Description{ get;set;}
-        
-        public string ImageFileName { get; set; }
-        [NotMapped]
-        public IFormFile ImageFile { get; set; }
-    }
+   
 
     public class ZUserVote
     {
         public Guid Id { get; set; }
-        public Guid ZVoteItemId { get; set; }
-        public ZVoteItem ZVoteItem { get; set; }
-        public IdentityUser Voter { get; set; }
+        public Guid ZVoteId { get; set; }
+        public string VoteItem { get; set; }
+        public String VoterId { get; set; }
+        public DateTimeOffset DOVoting { get; set; } = DateTimeOffset.Now;
     }
 
 }

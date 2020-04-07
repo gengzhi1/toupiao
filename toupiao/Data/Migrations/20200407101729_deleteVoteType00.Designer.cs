@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using toupiao.Data;
@@ -9,9 +10,10 @@ using toupiao.Data;
 namespace toupiao.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200407101729_deleteVoteType00")]
+    partial class deleteVoteType00
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +225,6 @@ namespace toupiao.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("DOVoting")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("VoteItem")
                         .HasColumnType("text");
 
@@ -236,6 +235,8 @@ namespace toupiao.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("VoterId");
 
                     b.ToTable("ZUserVote");
                 });
@@ -344,6 +345,13 @@ namespace toupiao.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("toupiao.Areas.zvote.Models.ZUserVote", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Voter")
+                        .WithMany()
+                        .HasForeignKey("VoterId");
                 });
 
             modelBuilder.Entity("toupiao.Areas.zvote.Models.ZVote", b =>

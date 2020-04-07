@@ -1,0 +1,96 @@
+﻿@model IEnumerable<toupiao.Areas.zvote.Models.ZVote>
+
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DOCreating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DOStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DOEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsSaveOnly)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XuanxiangA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XuanxiangB)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XuanxiangC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XuanxiangD)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsLegal)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOCreating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsSaveOnly)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.XuanxiangA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.XuanxiangB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.XuanxiangC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.XuanxiangD)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsLegal)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

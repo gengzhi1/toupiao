@@ -14,7 +14,6 @@ namespace toupiao.Data
         {
         }
         public DbSet<toupiao.Areas.zvote.Models.ZVote> ZVote { get; set; }
-        public DbSet<toupiao.Areas.zvote.Models.ZVoteItem> ZVoteItem { get; set; }
         public DbSet<toupiao.Areas.zvote.Models.ZUserVote> ZUserVote { get; set; }
     }
 }

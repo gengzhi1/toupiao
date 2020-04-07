@@ -19,6 +19,9 @@ namespace toupiao.Areas.zvote.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        
+        // 每24小时每用户最多投票数
+        private readonly int MaxVoteTimesPer24 = 3;
 
         public ZVoteController(
             UserManager<IdentityUser> userManager,
@@ -30,16 +33,16 @@ namespace toupiao.Areas.zvote.Controllers
 
         // GET: zvote/ZVote
         public async Task<IActionResult> Index(
-            int? pageNumber,
-            int? pageSize)
+            int pageNumber=1,
+            int pageSize=10)
         {
 
             var _user = await _userManager.GetUserAsync(User);
             
             var _zVote = await PaginatedList<ZVote>.CreateAsync(
                 _context.ZVote.Where(p=>p.Submitter == _user).AsNoTracking(), 
-                pageNumber ?? 1, 
-                pageSize??2,
+                pageNumber , 
+                pageSize,
                 ViewData);
 
 
@@ -61,6 +64,22 @@ namespace toupiao.Areas.zvote.Controllers
                 return NotFound();
             }
 
+            var _user = await _userManager.GetUserAsync(User);
+
+            if ( !zVote.IsLegal && zVote.Submitter !=_user )
+            {
+                return NotFound();
+            }
+
+            var zUserVotes = await _context.ZUserVote.Where(
+                p => p.ZVoteId == id)
+                .ToListAsync();
+
+
+            ViewData[nameof(zUserVotes)] = zUserVotes;
+            ViewData["userId"] = _user?.Id;
+            ViewData[nameof(MaxVoteTimesPer24)] = MaxVoteTimesPer24;
+
             return View(zVote);
         }
 
@@ -72,9 +91,8 @@ namespace toupiao.Areas.zvote.Controllers
             {
                 DOStart = DateTimeOffset.Now
             };
-            TempData[nameof(_zvote.DOStart)] = _zvote.DOStart?
-                .ToUnixTimeMilliseconds().ToString();
 
+            ViewData["IsEdit"] = false;
             return View( _zvote );
         }
 
@@ -85,8 +103,11 @@ namespace toupiao.Areas.zvote.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Title,Description,DOEnd,DOStart,IsSaveOnly,ItemType,"+
-            "MaxItemCountpu")] 
+            [Bind("Id,Title,Description,DOEnd,DOStart,IsSaveOnly,"+
+            "XuanxiangA,"+
+            "XuanxiangB,"+
+            "XuanxiangC,"+
+            "XuanxiangD")] 
             ZVote zVote
             )
         {
@@ -101,10 +122,7 @@ namespace toupiao.Areas.zvote.Controllers
                 _context.Add(zVote);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(
-                    nameof(ZVoteItemController.Create),
-                    nameof(ZVoteItem),
-                    new { zVote.Id} );
+                return RedirectToAction(nameof(Index));
 
             }
 
@@ -118,13 +136,20 @@ namespace toupiao.Areas.zvote.Controllers
             {
                 return NotFound();
             }
+            var _user = await _userManager.GetUserAsync(User);
 
-            var zVote = await _context.ZVote.FindAsync(id);
-            if (zVote == null)
+            var zVote = await _context.ZVote.FirstOrDefaultAsync(
+                p=>p.Id == id && p.Submitter == _user );
+
+
+            if (zVote == null || zVote.Submitter!=_user)
             {
                 return NotFound();
             }
-            return View(zVote);
+
+            ViewData["IsEdit"] = true;
+
+            return View(nameof(Create),zVote);
         }
 
         // POST: zvote/ZVote/Edit/5
@@ -132,7 +157,13 @@ namespace toupiao.Areas.zvote.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,DOCreating,DOEnd,IsSaveOnly,ItemType")] ZVote zVote)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind("Id,Title,Description,DOEnd,DOStart,IsSaveOnly,"+
+            "XuanxiangA,"+
+            "XuanxiangB,"+
+            "XuanxiangC,"+
+            "XuanxiangD")] 
+            ZVote zVote)
         {
             if (id != zVote.Id)
             {
@@ -172,7 +203,10 @@ namespace toupiao.Areas.zvote.Controllers
 
             var zVote = await _context.ZVote
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (zVote == null)
+
+            var _user = await _userManager.GetUserAsync(User);
+
+            if (zVote == null || zVote.Submitter!=_user)
             {
                 return NotFound();
             }
@@ -191,6 +225,61 @@ namespace toupiao.Areas.zvote.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        public async Task<IActionResult> VoteNowAsync(Guid Id, String Item)
+        {
+
+            var _user = await _userManager.GetUserAsync(User);
+
+            var zVote = await _context.ZVote.FindAsync(Id);
+
+            // 不合法
+            if (!zVote.IsLegal && zVote.Submitter != _user)
+            {
+                return NotFound();
+            }
+
+            var _userVote = await _context.ZUserVote.FirstOrDefaultAsync(
+                 p => p.ZVoteId == Id && p.VoteItem == Item
+                        && p.VoterId == _user.Id);
+
+            if( _userVote != null )
+            {
+                _context.ZUserVote.Remove(_userVote);
+
+                await _context.SaveChangesAsync();
+                return Ok(0);
+            }
+
+
+            var Des = await _context.ZUserVote.Where(
+                p => p.VoterId == _user.Id).OrderByDescending(p => p.DOVoting)
+                .Take(MaxVoteTimesPer24).ToListAsync();
+
+            if (Des.Count() == MaxVoteTimesPer24)
+            {
+
+
+                // 最近的第二次投票时间
+                var DODe2 = Des.Take(MaxVoteTimesPer24 - 1)
+                    .Select(p => p.DOVoting).Last();
+
+                if ((DateTimeOffset.Now - DODe2).Hours < 24)
+                {
+                    return Ok(3);
+                }
+
+            }
+
+            await _context.ZUserVote.AddAsync(new ZUserVote { 
+                VoteItem = Item,
+                VoterId = _user.Id,
+                ZVoteId = Id
+            });
+
+            await _context.SaveChangesAsync();
+            return Ok(1);
+        }
         private bool ZVoteExists(Guid id)
         {
             return _context.ZVote.Any(e => e.Id == id);

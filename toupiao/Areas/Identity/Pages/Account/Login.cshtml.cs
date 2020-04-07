@@ -16,6 +16,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
+using toupiao.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace toupiao.Areas.Identity.Pages.Account
 {
@@ -23,21 +25,27 @@ namespace toupiao.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly IConfiguration _configuration ;
+        private readonly IConfiguration _configuration;
         private readonly IStringLocalizer<Program> _localizer;
+        private readonly ApplicationDbContext _context;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
-            IConfiguration configuration , 
+            IConfiguration configuration ,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context,
             IStringLocalizer<Program> localizer,
             UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _roleManager = roleManager;
             _configuration = configuration;
+            _context = context;
             _localizer = localizer;
         }
 
@@ -123,6 +131,40 @@ namespace toupiao.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    if( _context.Users.Count() == 1)
+                    {
+                        // 第一个用户为管理员
+                        if (!await _context.Roles.AnyAsync( 
+                            p => p.Name == "ADMIN"))
+                        {
+                            var role = new IdentityRole
+                            {
+                                Name = "ADMIN",
+                                NormalizedName = "ADMIN"
+                            };
+
+                            await _roleManager.CreateAsync(role);
+
+                            await _context.SaveChangesAsync();
+
+
+                        }
+
+                        if(!User.IsInRole("ADMIN"))
+                        {
+
+                            await _userManager.AddToRolesAsync(
+                                _user, new[] { "ADMIN" });
+
+                            await _context.SaveChangesAsync();
+
+                            _logger.LogInformation(
+                                $"User: {_user.Email} is ADMIN now");
+                        }
+
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

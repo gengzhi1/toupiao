@@ -144,11 +144,12 @@ namespace toupiao
 
             app.UseRequestLocalization();
 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "ZArea",
-                    pattern: 
+                    pattern:
                     "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(

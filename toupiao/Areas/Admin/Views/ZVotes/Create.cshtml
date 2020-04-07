@@ -1,0 +1,83 @@
+﻿@model toupiao.Areas.zvote.Models.ZVote
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ZVote</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DOCreating" class="control-label"></label>
+                <input asp-for="DOCreating" class="form-control" />
+                <span asp-validation-for="DOCreating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DOStart" class="control-label"></label>
+                <input asp-for="DOStart" class="form-control" />
+                <span asp-validation-for="DOStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DOEnd" class="control-label"></label>
+                <input asp-for="DOEnd" class="form-control" />
+                <span asp-validation-for="DOEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsSaveOnly" /> @Html.DisplayNameFor(model => model.IsSaveOnly)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="XuanxiangA" class="control-label"></label>
+                <input asp-for="XuanxiangA" class="form-control" />
+                <span asp-validation-for="XuanxiangA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="XuanxiangB" class="control-label"></label>
+                <input asp-for="XuanxiangB" class="form-control" />
+                <span asp-validation-for="XuanxiangB" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="XuanxiangC" class="control-label"></label>
+                <input asp-for="XuanxiangC" class="form-control" />
+                <span asp-validation-for="XuanxiangC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="XuanxiangD" class="control-label"></label>
+                <input asp-for="XuanxiangD" class="form-control" />
+                <span asp-validation-for="XuanxiangD" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsLegal" /> @Html.DisplayNameFor(model => model.IsLegal)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

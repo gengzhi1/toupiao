@@ -1,7 +1,10 @@
 @model toupiao.Areas.zvote.Models.ZVote
+@using toupiao.Areas.zvote.Models
 
 @{
     ViewData["Title"] = "Details";
+    var zUserVotes = ViewData["zUserVotes"] as List<ZUserVote>;
+    var userId = ViewData["userId"]?.ToString() ?? "";
 }
 
 <h1>Details</h1>
@@ -9,40 +12,138 @@
 <div>
     <h4>ZVote</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DOCreating)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DOCreating)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DOEnd)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DOEnd)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsSaveOnly)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsSaveOnly)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ItemType)
-        </dd>
-    </dl>
+    <div class="row">
+
+        <div class="col col-6">
+
+
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DOCreating)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DOCreating)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DOEnd)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DOEnd)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IsSaveOnly)
+                </dt>
+
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.IsSaveOnly)
+                </dd>
+            </dl>
+        </div>
+        <div class="col col-6">
+
+            <div class="col col-6">
+
+
+                <dl class="row">
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.XuanxiangA)
+                        <span class="text-info text-lg">(已投@( 
+                            zUserVotes.Where(p=>p.VoteItem =="A").Count() )票)</span>
+                    </dd>
+                    <dt class="col-sm-2">
+                        <a class="btn btn-info vote-now" data-id="@Model.Id"
+                           data-item="A">
+                            @( zUserVotes.Any(
+                            p=>p.VoterId == userId && p.VoteItem =="A" )?
+                            "取消":"投票" )
+                        </a>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.XuanxiangB)
+                        <span class="text-info text-lg">
+                            (已投@(
+                            zUserVotes.Where(p=>p.VoteItem =="B").Count() )票)
+                        </span>
+                    </dd>
+                    <dt class="col-sm-2">
+                        <a class="btn btn-info vote-now" data-id="@Model.Id"
+                           data-item="B">
+                            @( zUserVotes.Any(
+                            p=>p.VoterId == userId && p.VoteItem =="B" )?
+                            "取消":"投票" )
+                        </a>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.XuanxiangC)
+
+                        <span class="text-info text-lg">
+                            (已投@(
+                            zUserVotes.Where(p=>p.VoteItem =="C").Count() )票)
+                        </span>
+                    </dd>
+                    <dt class="col-sm-2">
+                        <a class="btn btn-info vote-now" data-id="@Model.Id"
+                           data-item="C">
+                            @( zUserVotes.Any(
+                            p=>p.VoterId == userId && p.VoteItem =="C" )?
+                            "取消":"投票" )
+                        </a>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.XuanxiangD)
+                        <span class="text-info text-lg">
+                            (已投@(
+                            zUserVotes.Where(p=>p.VoteItem =="D").Count() )票)
+                        </span>
+                    </dd>
+                    <dt class="col-sm-2">
+                        <a class="btn btn-info vote-now" data-id="@Model.Id"
+                           data-item="D">
+                            @( zUserVotes.Any(
+                            p=>p.VoterId == userId && p.VoteItem =="D" )?
+                            "取消":"投票" )
+                        </a>
+                    </dt>
+                </dl>
+            </div>
+        </div>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+
+
+@section Scripts
+{
+
+    <partial name="_ValidationScriptsPartial" />
+<script>
+    $(document).on('click', '.vote-now', (event) => {
+        var _id = $(event.currentTarget).data('id');
+        var _item = $(event.currentTarget).data('item');
+        $.get(`@( Url.Action("VoteNow","ZVote") )?id=${_id}&item=${_item}`,
+            (data, status) => {
+                if (status == "success") {
+                    if (data == 3) {
+                        zlalert(
+                            "哎呀!每天只能投@( ViewData["MaxVoteTimesPer24"] )票哦!")
+                    }
+                    else {
+
+                        location.reload();
+                    }
+                }
+            });
+    });
+</script>
+}

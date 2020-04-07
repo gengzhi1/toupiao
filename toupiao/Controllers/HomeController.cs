@@ -18,13 +18,20 @@ namespace toupiao.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IStringLocalizer<Program> _localizer;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
 
-        public HomeController(ILogger<HomeController> logger, 
-            IStringLocalizer<Program> localizer)
+        public HomeController(
+            ILogger<HomeController> logger,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<IdentityUser> userManager,
+        IStringLocalizer<Program> localizer)
         {
             _logger = logger;
             _localizer = localizer;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public IActionResult Index()

@@ -3,16 +3,18 @@
 
 @{
     ViewData["Title"] = "Create";
+    var IsEdit = Convert.ToBoolean(ViewData["IsEdit"]);
+    var Action = IsEdit ? "Edit" : "Create";
 }
 
 <hr />
 <div class="row">
-    <div class="offset-md-3 col-md-6 text-center">
+    <div class="offset-md-1 col-md-10 text-center">
 
         <h1>新的投票</h1>
         <h4>在这里产生。</h4>
 
-        <form asp-action="Create" id="zvote_create_form">
+        <form asp-action="@Action" id="zvote_create_form" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -30,45 +32,69 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="DOStart" class="control-label"></label>
-                <span class="text-info">(默认为立即发布)</span>
-                <input asp-for="DOStart" hidden />
+
                 <div class="row">
                     <div class="col col-6 ">
-                        <input type="date" class="form-control d-o-start-date" />
+
+                        <label asp-for="DOStart" class="control-label"></label>
+                        <span class="text-info">(默认为立即发布)</span>
+                        <input asp-for="DOStart" class="form-control" />
+
+                        <span asp-validation-for="DOStart" class="text-danger"></span>
                     </div>
+
                     <div class="col col-6 ">
-                        <input type="time" class="form-control d-o-start-time" />
+
+                        <label asp-for="DOEnd" class="control-label"></label>
+                        <input asp-for="DOEnd" class="form-control" />
+
+                        <span asp-validation-for="DOEnd" class="text-danger"></span>
                     </div>
+
                 </div>
-                <span asp-validation-for="DOStart" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DOEnd" class="control-label"></label>
-                <input asp-for="DOEnd" hidden />
-                <div class="row">
-                    <div class="col col-6 ">
-                        <input type="date" class="form-control d-o-end-date" />
-                    </div>
-                    <div class="col col-6 ">
-                        <input type="time" class="form-control d-o-end-time" />
-                    </div>
-                </div>
-                <span asp-validation-for="DOEnd" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ItemType" class="control-label"></label>
-                <select asp-for="ItemType" 
-                        asp-items="Html.GetEnumSelectList<ItemTypeEnum>()"
-                        class="form-control"></select>
-                <span asp-validation-for="ItemType" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="MaxItemCountpu" class="control-label"></label>
-                <input asp-for="MaxItemCountpu" class="form-control"/>
-                <span asp-validation-for="MaxItemCountpu" class="text-danger">
-                </span>
+
+
+            <div class="row">
+
+                <div class=" col col-3 form-group">
+                    <label asp-for="XuanxiangA" class="control-label"></label>
+                    <textarea asp-for="XuanxiangA"
+                              class="form-control"
+                              rows="2"></textarea>
+                    <span asp-validation-for="XuanxiangA"
+                          class="text-danger"></span>
+                </div>
+
+                <div class=" col col-3  form-group">
+                    <label asp-for="XuanxiangB" class="control-label"></label>
+                    <textarea asp-for="XuanxiangB"
+                              class="form-control"
+                              rows="2"></textarea>
+                    <span asp-validation-for="XuanxiangB"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="  col col-3 form-group">
+                    <label asp-for="XuanxiangC" class="control-label"></label>
+                    <textarea asp-for="XuanxiangC"
+                              class="form-control"
+                              rows="2"></textarea>
+                    <span asp-validation-for="XuanxiangC"
+                          class="text-danger"></span>
+                </div>
+
+                <div class=" col col-3  form-group">
+                    <label asp-for="XuanxiangD" class="control-label"></label>
+                    <textarea asp-for="XuanxiangD"
+                              class="form-control"
+                              rows="2"></textarea>
+                    <span asp-validation-for="XuanxiangD"
+                          class="text-danger"></span>
+                </div>
+
+
             </div>
 
             <div class="form-group form-check">
@@ -84,6 +110,7 @@
                 <input type="submit" class="zl-form-input" hidden />
                 <a class="btn btn-primary zlsubmit">添加投票项&raquo;</a>
             </div>
+
         </form>
     </div>
 </div>
