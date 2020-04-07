@@ -441,3 +441,5 @@ app.db
 appsettings.json
 
 *.mo
+
+Data/Files/

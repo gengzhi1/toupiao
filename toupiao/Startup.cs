@@ -53,8 +53,8 @@ namespace toupiao
                 .AddDataAnnotationsLocalization();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("PostgreSQLConnection")));
             
             services.AddDefaultIdentity<IdentityUser>(
                     // 验证用户才能登录

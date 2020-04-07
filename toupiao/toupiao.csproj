@@ -4,6 +4,11 @@
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Areas\zvote\Views\ZVoteItem\Create.cshtml" />
+    <None Include="Areas\zvote\Views\ZVoteItem\Delete.cshtml" />
+    <None Include="Areas\zvote\Views\ZVoteItem\Details.cshtml" />
+    <None Include="Areas\zvote\Views\ZVoteItem\Edit.cshtml" />
+    <None Include="Areas\zvote\Views\ZVoteItem\Index.cshtml" />
     <None Include="wwwroot\node_modules\js-cookie\src\js.cookie.min.js" />
   </ItemGroup>
 
@@ -28,6 +33,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
   </ItemGroup>
 
 </Project>

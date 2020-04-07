@@ -1,0 +1,43 @@
+﻿
+@{
+    var HasPreviousPage = Convert.ToBoolean(ViewData["HasPreviousPage"]);
+    var HasNextPage = Convert.ToBoolean(ViewData["HasNextPage"]);
+
+    var TotalPages = Convert.ToInt32(ViewData["TotalPages"]);
+    var PageIndex = Convert.ToInt32(ViewData["PageIndex"]);
+
+    var prevDisabled = !HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !HasNextPage ? "disabled" : "";
+    var pn = ( Convert.ToInt32 (PageIndex) < 3 ?
+        Enumerable.Range(1, TotalPages < 5 ? TotalPages : 5) :
+        Enumerable.Range(
+            PageIndex - 2,
+            TotalPages < PageIndex + 2 ?
+            TotalPages : PageIndex + 2))
+            .ToArray();
+}
+
+<div class="row">
+    <div class="col col-12 text-center">
+        <a asp-route-pageNumber="@(PageIndex - 1)"
+           class="btn btn-outline-primary @prevDisabled">
+            上一页
+        </a>
+
+        @foreach (var _pn in pn)
+        {
+            var middlePage = _pn == PageIndex ?
+                new[] { "", "disabled" } : new[] { "-outline", "" };
+
+            <a asp-route-pageNumber="@_pn"
+               class="btn btn@(middlePage[0])-success @(middlePage[1])">
+                @_pn
+            </a>
+        }
+
+        <a asp-route-pageNumber="@(PageIndex + 1)"
+           class="btn btn-outline-info @nextDisabled">
+            下一页
+        </a>
+    </div>
+</div>

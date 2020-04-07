@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -64,9 +65,25 @@ namespace toupiao.Areas.zvote.Models
         public Guid Id{ get;set;}
 
         [ForeignKey("ZVote")]
-        public ZVote ZlVote { get;set;}
+        public Guid ZVoteId { get;set;}
+
+        public ZVote ZVote { get; set; }
+
         public string Content{ get;set;}
+
         public string Description{ get;set;}
+        
+        public string ImageFileName { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+    }
+
+    public class ZUserVote
+    {
+        public Guid Id { get; set; }
+        public Guid ZVoteItemId { get; set; }
+        public ZVoteItem ZVoteItem { get; set; }
+        public IdentityUser Voter { get; set; }
     }
 
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace toupiao.Data.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class zinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,7 +52,7 @@ namespace toupiao.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -72,7 +73,7 @@ namespace toupiao.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -152,6 +153,53 @@ namespace toupiao.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ZVote",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 64, nullable: true),
+                    DOCreating = table.Column<DateTimeOffset>(nullable: false),
+                    DOStart = table.Column<DateTimeOffset>(nullable: true),
+                    DOEnd = table.Column<DateTimeOffset>(nullable: false),
+                    SubmitterId = table.Column<string>(nullable: true),
+                    IsSaveOnly = table.Column<bool>(nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    ItemType = table.Column<string>(nullable: true),
+                    MaxItemCountpu = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZVote", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ZVote_AspNetUsers_SubmitterId",
+                        column: x => x.SubmitterId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ZVoteItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ZVote = table.Column<Guid>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ImageFileName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZVoteItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ZVoteItem_ZVote_ZVote",
+                        column: x => x.ZVote,
+                        principalTable: "ZVote",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -188,6 +236,16 @@ namespace toupiao.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ZVote_SubmitterId",
+                table: "ZVote",
+                column: "SubmitterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ZVoteItem_ZVote",
+                table: "ZVoteItem",
+                column: "ZVote");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -208,7 +266,13 @@ namespace toupiao.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ZVoteItem");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ZVote");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
