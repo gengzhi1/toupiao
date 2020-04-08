@@ -37,12 +37,10 @@ namespace toupiao.Areas.zvote.Models
         [DataType(DataType.Date)]
         public DateTimeOffset DOEnd{ get; set;} 
             = DateTimeOffset.Now.AddDays(1);
-            
-        [Display(Name = "创建者")]
-        public IdentityUser Submitter{get;set;}
 
-        [Display(Name = "仅保存")]
-        public bool IsSaveOnly{get; set;} = false;
+        [Display(Name = "创建者")]
+        public IdentityUser Submitter { get; set; }
+
 
         [Display(Name = "描述")]
         [StringLength(256,
@@ -51,21 +49,30 @@ namespace toupiao.Areas.zvote.Models
         public string Description { get; set; }
 
         [StringLength(128)]
+        [Display(Name = "选项A")]
         public string XuanxiangA { get; set; }
 
 
         [StringLength(128)]
+        [Display(Name = "选项B")]
         public string XuanxiangB { get; set; }
 
         [StringLength(128)]
+        [Display(Name = "选项C")]
         public string XuanxiangC { get; set; }
 
         [StringLength(128)]
+        [Display(Name = "选项D")]
         public string XuanxiangD { get; set; }
 
-
+        [Display(Name = "审核通过")]
         public bool IsLegal { get; set; } = false;
 
+        [NotMapped]
+        public IFormFile CoverImage { get; set; }
+
+        [Display(Name ="封面路径")]
+        public string CoverPath { get; set; }
 
     }
 

@@ -5,11 +5,13 @@
 
 }
 
-<h1>Index</h1>
+<h1>投票审核</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<div class="col col-3 float-right">
+    <partial name="_IndexSearch" />
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -25,9 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.DOEnd)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsSaveOnly)
-            </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
@@ -56,17 +56,16 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DOCreating)
+                @Html.DisplayFor(modelItem => item.DOCreating
+                    .LocalDateTime.Date.ToShortDateString())
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DOStart)
+                @(item.DOStart?.LocalDateTime.Date.ToShortDateString())
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DOEnd)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsSaveOnly)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>

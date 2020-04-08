@@ -48,12 +48,18 @@ namespace toupiao.Areas.Admin.Controllers
         [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult> IndexAsync(
             int pageNumber =1,
-            int pageSize = 10)
+            int pageSize = 10,
+            String kw="")
         {
             var users = await PaginatedList<IdentityUser>.CreateAsync(
-                _context.Users.AsNoTracking(),
-                pageNumber ,
-                pageSize ,
+                _context.Users
+                    .Where(p =>
+                        kw.Length < 1 ? true :
+                        (p.UserName.Contains(kw) ||
+                        p.Email.Contains(kw)))
+                    .AsNoTracking(),
+                pageNumber,
+                pageSize,
                 ViewData);
             var admins = await _context.UserRoles.Where(
                 p => p.RoleId == AdminRoleId).ToListAsync();

@@ -5,13 +5,34 @@
     ViewData["Title"] = "Details";
     var zUserVotes = ViewData["zUserVotes"] as List<ZUserVote>;
     var userId = ViewData["userId"]?.ToString() ?? "";
+    var IsAllowVote = (Model.DOStart <= DateTimeOffset.Now) &&
+        (DateTimeOffset.Now < Model.DOEnd);
 }
 
-<h1>Details</h1>
+<h1>
+    @( 
+        Model.DOEnd < DateTimeOffset.Now ? "投票结束":
+        Model.DOStart <= DateTimeOffset.Now? 
+            "投票未开始":"参与投票!" )
+</h1>
+<hr />
+<h5>@Model.Description</h5>
+<hr />
+@if (Model.CoverPath?.Length > 1)
+{
 
+
+    <div class="col col-12 text-center">
+        <img src="@( Url.Action("GetFile","Public", 
+            new { FileName = Model.CoverPath , area="" }) )" 
+             style="max-width:50%" 
+             class="" />
+    </div>
+
+}
+
+<hr/>
 <div>
-    <h4>ZVote</h4>
-    <hr />
     <div class="row">
 
         <div class="col col-6">
@@ -25,10 +46,10 @@
                     @Html.DisplayFor(model => model.Title)
                 </dd>
                 <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.DOCreating)
+                    @Html.DisplayNameFor(model => model.DOStart)
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.DOCreating)
+                    @Html.DisplayFor(model => model.DOStart)
                 </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.DOEnd)
@@ -36,13 +57,7 @@
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.DOEnd)
                 </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.IsSaveOnly)
-                </dt>
 
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.IsSaveOnly)
-                </dd>
             </dl>
         </div>
         <div class="col col-6">
@@ -53,71 +68,92 @@
                 <dl class="row">
                     <dd class="col-sm-10">
                         @Html.DisplayFor(model => model.XuanxiangA)
-                        <span class="text-info text-lg">(已投@( 
-                            zUserVotes.Where(p=>p.VoteItem =="A").Count() )票)</span>
-                    </dd>
-                    <dt class="col-sm-2">
-                        <a class="btn btn-info vote-now" data-id="@Model.Id"
-                           data-item="A">
-                            @( zUserVotes.Any(
-                            p=>p.VoterId == userId && p.VoteItem =="A" )?
-                            "取消":"投票" )
-                        </a>
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.XuanxiangB)
                         <span class="text-info text-lg">
                             (已投@(
+                            zUserVotes.Where(p=>p.VoteItem =="A").Count() )票)
+                        </span>
+                    </dd>
+                    @if (IsAllowVote)
+                    {
+                        <dt class="col-sm-2">
+                            <a class="btn btn-info vote-now" data-id="@Model.Id"
+                               data-item="A">
+                                @( zUserVotes.Any(
+                p => p.VoterId == userId && p.VoteItem == "A") ?
+                "已投" : "投票" )
+                            </a>
+                        </dt>
+                    }
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.XuanxiangB)
+                            <span class="text-info text-lg">
+                                (已投@(
                             zUserVotes.Where(p=>p.VoteItem =="B").Count() )票)
-                        </span>
-                    </dd>
-                    <dt class="col-sm-2">
-                        <a class="btn btn-info vote-now" data-id="@Model.Id"
-                           data-item="B">
-                            @( zUserVotes.Any(
-                            p=>p.VoterId == userId && p.VoteItem =="B" )?
-                            "取消":"投票" )
-                        </a>
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.XuanxiangC)
+                            </span>
+                        </dd>
+                        @if (IsAllowVote)
+                        {
+                            <dt class="col-sm-2">
+                                <a class="btn btn-info vote-now" data-id="@Model.Id"
+                                   data-item="B">
+                                    @( zUserVotes.Any(
+                            p => p.VoterId == userId && p.VoteItem == "B") ?
+                            "已投" : "投票" )
+                                </a>
+                            </dt>
+                        }
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.XuanxiangC)
 
-                        <span class="text-info text-lg">
-                            (已投@(
+                            <span class="text-info text-lg">
+                                (已投@(
                             zUserVotes.Where(p=>p.VoteItem =="C").Count() )票)
-                        </span>
-                    </dd>
-                    <dt class="col-sm-2">
-                        <a class="btn btn-info vote-now" data-id="@Model.Id"
-                           data-item="C">
-                            @( zUserVotes.Any(
-                            p=>p.VoterId == userId && p.VoteItem =="C" )?
-                            "取消":"投票" )
-                        </a>
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.XuanxiangD)
-                        <span class="text-info text-lg">
-                            (已投@(
+                            </span>
+                        </dd>
+                        @if (IsAllowVote)
+                        {
+                            <dt class="col-sm-2">
+                                <a class="btn btn-info vote-now" data-id="@Model.Id"
+                                   data-item="C">
+                                    @( zUserVotes.Any(
+                        p => p.VoterId == userId && p.VoteItem == "C") ?
+                        "已投" : "投票" )
+                                </a>
+                            </dt>
+                        }
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.XuanxiangD)
+                            <span class="text-info text-lg">
+                                (已投@(
                             zUserVotes.Where(p=>p.VoteItem =="D").Count() )票)
-                        </span>
-                    </dd>
-                    <dt class="col-sm-2">
-                        <a class="btn btn-info vote-now" data-id="@Model.Id"
-                           data-item="D">
-                            @( zUserVotes.Any(
-                            p=>p.VoterId == userId && p.VoteItem =="D" )?
-                            "取消":"投票" )
-                        </a>
-                    </dt>
-                </dl>
+                            </span>
+                        </dd>
+                        @if (IsAllowVote)
+                        {
+                            <dt class="col-sm-2">
+                                <a class="btn btn-info vote-now" data-id="@Model.Id"
+                                   data-item="D">
+                                    @( zUserVotes.Any(
+                    p => p.VoterId == userId && p.VoteItem == "D") ?
+                    "已投" : "投票" )
+                                </a>
+                            </dt>
+                        }
+                    </dl>
             </div>
         </div>
     </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-danger">返回</a>
+
+    @if (Model.Submitter == User.Identity)
+    {
+
+        <a asp-action="Edit" class="btn btn-info" asp-route-id="@Model.Id">
+            编辑</a>
+    }
+
 </div>
 
 
@@ -139,8 +175,10 @@
                             "哎呀!每天只能投@( ViewData["MaxVoteTimesPer24"] )票哦!")
                     }
                     else {
-
-                        location.reload();
+                        zlalert('投票成功', 'info');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 5000);
                     }
                 }
             });

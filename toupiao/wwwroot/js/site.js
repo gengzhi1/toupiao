@@ -20,3 +20,13 @@ function zlalert(message, alert_type = 'warning',timeout=4500 ) {
         $('.alert').remove();
     }, timeout);
 }
+
+// 即执行函数, 这里的代码会被直接运行
+(function () {
+    $(document).on('click', '#index_search', (event) => {
+        if ($('#index_search_input').val().length < 1) return;
+        var search_param = new URLSearchParams(location.search);
+        search_param.append('kw', $('#index_search_input').val());
+        location.href = location.pathname+'?' + search_param.toString();
+    });
+}());

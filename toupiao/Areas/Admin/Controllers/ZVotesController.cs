@@ -24,9 +24,18 @@ namespace toupiao.Areas.Admin.Controllers
         }
 
         // GET: Admin/ZVotes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string kw="")
         {
-            return View(await _context.ZVote.ToListAsync());
+            var _zVotes = await _context.ZVote
+                .Where(
+                    p=>
+                        kw.Length<1?true:(p.Title.Contains(kw) || 
+                        p.Submitter.UserName.Contains(kw)))
+                .OrderByDescending(p => p.DOCreating)
+                .ToListAsync();
+
+            return View();
         }
 
         // GET: Admin/ZVotes/Details/5

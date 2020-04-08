@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,17 @@ namespace toupiao.Controllers
 {
     public static class ControllerMix
     {
+        public static string GetContentType(string FileNameWithExtension)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(FileNameWithExtension, out string contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            return contentType;
+        }
+
+
         public static async Task<string> SaveFormFileAsync(
             IFormFile formFile,
             IWebHostEnvironment env,
