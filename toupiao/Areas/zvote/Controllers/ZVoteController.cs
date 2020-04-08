@@ -22,7 +22,7 @@ namespace toupiao.Areas.zvote.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<IdentityUser> _userManager;
         
-        // 每24小时每用户最多投票数
+        // 每24小时 每用户 每投票项 最 多投票数
         private readonly int MaxVoteTimesPer24 = 3;
 
         public ZVoteController(
@@ -266,11 +266,11 @@ namespace toupiao.Areas.zvote.Controllers
                 return NotFound();
             }
 
-            var _userVote = await _context.ZUserVote.FirstOrDefaultAsync(
+            var _userVote = await _context.ZUserVote.Where(
                  p => p.ZVoteId == Id && p.VoteItem == Item
-                        && p.VoterId == _user.Id);
+                        && p.VoterId == _user.Id).ToListAsync();
 
-            if( _userVote != null )return Ok(0);
+            if( _userVote.Count() > MaxVoteTimesPer24 )return Ok(0);
 
 
             var Des = await _context.ZUserVote.Where(
