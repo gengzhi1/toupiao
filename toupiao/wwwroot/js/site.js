@@ -43,9 +43,9 @@ function updateQueryStringParameter(uri, key, value) {
             // location.pathname+'?' + search_param.toString();
     });
 
-    $(document).on('click', '.prev-page,next-page', (event) => {
+    $(document).on('click', '.to-page', (event) => {
         location.href = updateQueryStringParameter(
             location.href, 'pageNumber',
-            $(event.currentTarget).data('pageNumber'));
+            $(event.currentTarget).data('page_number'));
     });
 }());

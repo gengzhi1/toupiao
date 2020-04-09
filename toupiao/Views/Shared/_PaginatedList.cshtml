@@ -21,8 +21,8 @@
 
 <div class="row">
     <div class="col col-12 text-center">
-        <a  data-pageNumber="@(PageIndex - 1)" 
-           class="btn btn-outline-primary prev-page @prevDisabled">
+        <a  data-page_number="@(PageIndex - 1)" 
+           class="btn btn-outline-primary to-page @prevDisabled">
             上一页
         </a>
 
@@ -31,14 +31,14 @@
             var middlePage = _pn == PageIndex ?
                 new[] { "", "disabled" } : new[] { "-outline", "" };
 
-            <a asp-route-pageNumber="@_pn"
-               class="btn btn@(middlePage[0])-success @(middlePage[1])">
+            <a data-page_number="@_pn"
+               class="btn btn@(middlePage[0])-success @(middlePage[1]) to-page">
                 @_pn
             </a>
         }
 
-        <a data-pageNumber="@(PageIndex + 1)"
-           class="btn btn-outline-info next-page @nextDisabled">
+        <a dat-page_number="@(PageIndex + 1)"
+           class="btn btn-outline-info to-page @nextDisabled">
             下一页
         </a>
     </div>
