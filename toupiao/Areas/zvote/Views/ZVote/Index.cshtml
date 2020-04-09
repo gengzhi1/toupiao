@@ -17,10 +17,10 @@
 </p>
 
 <div class="col col-12 text-right">
-    <a asp-route-viewAll="1" class="btn btn-info @(IsViewAll?"disabled":"")" >
+    <a data-view_all="1" class=" view-all btn btn-info @(IsViewAll?"disabled":"") " >
         所有投票</a>
-    <a asp-route-viewAll="0" 
-       class="btn btn-primary @(IsViewAll?"":"disabled")">只看我的</a>
+    <a data-view_all="1" 
+       class=" view-all btn btn-primary @(IsViewAll?"":"disabled")">只看我的</a>
 </div>
 
 <div class="col col-3 float-right">
@@ -75,4 +75,12 @@
 {
 
     <partial name="_ValidationScriptsPartial" />
+<script>
+    $(document).on('click', '.view-all', (event) => {
+        var is_view_all = $(event.currentTarget).data("view_all");
+        var url_params = new URLSearchParams(location.search);
+        url_params.append('ViewAll', is_view_all);
+        location.href = location.pathname + '/' + url_params.toString();
+    });
+</script>
 }
