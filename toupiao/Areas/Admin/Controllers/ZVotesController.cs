@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using toupiao.Areas.zvote.Models;
+using toupiao.Controllers;
 using toupiao.Data;
 
 namespace toupiao.Areas.Admin.Controllers
@@ -25,17 +26,24 @@ namespace toupiao.Areas.Admin.Controllers
 
         // GET: Admin/ZVotes
         public async Task<IActionResult> Index(
+            int pageNumber = 1,
+            int pageSize = 10,
             string kw="")
         {
-            var _zVotes = await _context.ZVote
-                .Where(
-                    p=>
-                        kw.Length<1?true:(p.Title.Contains(kw) || 
+
+
+            var _zVotes = await PaginatedList<ZVote>.CreateAsync(
+                _context.ZVote.Where(
+                    p =>
+                        kw.Length < 1 ? true : (p.Title.Contains(kw) ||
                         p.Submitter.UserName.Contains(kw)))
                 .OrderByDescending(p => p.DOCreating)
-                .ToListAsync();
+                .AsNoTracking(),
+                pageNumber,
+                pageSize,
+                ViewData);
 
-            return View();
+            return View(_zVotes);
         }
 
         // GET: Admin/ZVotes/Details/5

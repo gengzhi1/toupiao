@@ -97,7 +97,7 @@ namespace toupiao.Controllers
             
             viewData.Add(nameof(PageIndex), pageIndex);
             viewData.Add(nameof(TotalPages),TotalPages );
-            viewData.Add(nameof(HasPreviousPage), HasNextPage);
+            viewData.Add(nameof(HasPreviousPage), HasPreviousPage);
             viewData.Add(nameof(HasNextPage), HasNextPage);
         
             this.AddRange(items);

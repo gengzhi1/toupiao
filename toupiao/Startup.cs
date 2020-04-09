@@ -142,6 +142,8 @@ namespace toupiao
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCookiePolicy();
+
             app.UseRequestLocalization();
 
 

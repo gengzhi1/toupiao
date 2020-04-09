@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using toupiao.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace toupiao.Areas.Identity.Pages.Account
 {
@@ -128,6 +129,7 @@ namespace toupiao.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                // µÇÂ¼³É¹¦
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -165,6 +167,19 @@ namespace toupiao.Areas.Identity.Pages.Account
 
                     }
 
+                    if (User.IsInRole("ADMIN"))
+                    {
+
+
+                        Response.Cookies.Append(
+                            key: "IsAdmin",
+                            value: "1",
+                            options: new CookieOptions()
+                            {
+                                Expires = DateTime.Now.AddYears(1)
+                            });
+                    }
+                     
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

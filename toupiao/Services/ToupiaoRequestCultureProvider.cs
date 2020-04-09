@@ -23,13 +23,6 @@ namespace toupiao.Services
 
             CultureCookie =( string.IsNullOrEmpty(CultureCookie) || !_SupportedUICultures.Contains(CultureCookie))?"zh-Hans":CultureCookie;  
 
-            httpContext.Response.Cookies.Append(
-                key:CULTURE_String, 
-                value:CultureCookie, 
-                options: new CookieOptions() { 
-                    Expires = DateTime.Now.AddYears(1)
-                });
-                
             return Task.FromResult(new ProviderCultureResult(CultureCookie));
         }
     }

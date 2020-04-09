@@ -1,11 +1,12 @@
 @page
 @model LoginModel
+<div class="offset-md-4 col-md-4 text-center">
+        @{
+            ViewData["Title"] = "请您先登录!";
+        }
 
-@{
-    ViewData["Title"] = "登录";
-}
-
-<h1>@ViewData["Title"]</h1>
+        <h1>@ViewData["Title"]</h1>
+ </div>
 
 <div class="row">
     <div class="offset-md-4 col-md-4 text-center">

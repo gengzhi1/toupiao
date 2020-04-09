@@ -52,7 +52,7 @@ namespace toupiao.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required(ErrorMessage="必须填写邮箱")]
-            [EmailAddress(ErrorMessage="你还输入的不是邮箱")]
+            [EmailAddress(ErrorMessage="你输入的不是邮箱")]
             [Display(Name = "电子邮件")]
             public string Email { get; set; }
 
@@ -65,7 +65,7 @@ namespace toupiao.Areas.Identity.Pages.Account
             [RegularExpression(
                 @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&_])"+
                 @"[A-Za-z\d$@$!%*?&_]{6,}",
-                ErrorMessage = "密码要有数字大小写和字符(@$!%*?&_), 6位以上哦!")]
+                ErrorMessage = "密码需要包含数字大小写字母和字符(@$!%*?&_), 6位以上哦!")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]

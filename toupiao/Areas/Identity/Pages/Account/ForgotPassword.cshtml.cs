@@ -43,6 +43,7 @@ namespace toupiao.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
+            [Display(Name = "” œ‰")]
             public string Email { get; set; }
         }
 

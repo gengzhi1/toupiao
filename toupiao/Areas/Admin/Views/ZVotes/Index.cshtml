@@ -1,4 +1,7 @@
-﻿@model IEnumerable<toupiao.Areas.zvote.Models.ZVote>
+﻿
+
+@using toupiao.Controllers
+@model PaginatedList<toupiao.Areas.zvote.Models.ZVote>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,80 +19,81 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                标题
+            </th>
+            <th>创建时间
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DOCreating)
+                开始时间
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DOStart)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DOEnd)
+                结束时间
             </th>
 
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
+            <th>描述
+            </th>
+            <th>选项A
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.XuanxiangA)
+                选项B
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.XuanxiangB)
+                选项C
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.XuanxiangC)
+                选项D
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.XuanxiangD)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsLegal)
+                审核
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOCreating
-                    .LocalDateTime.Date.ToShortDateString())
-            </td>
-            <td>
-                @(item.DOStart?.LocalDateTime.Date.ToShortDateString())
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOEnd)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @(item.Title)
+                </td>
+                <td>
+                    @(item.DOCreating
+                        .LocalDateTime.Date.ToShortDateString())
+                </td>
+                <td>
+                    @(item.DOStart?.LocalDateTime.Date.ToShortDateString())
+                </td>
+                <td>
+                    @( item.DOEnd)
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.XuanxiangA)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.XuanxiangB)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.XuanxiangC)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.XuanxiangD)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsLegal)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @(item.Description)
+                </td>
+                <td>
+                    @(item.XuanxiangA)
+                </td>
+                <td>
+                    @(item.XuanxiangB)
+                </td>
+                <td>
+                    @(item.XuanxiangC)
+                </td>
+                <td>
+                    @(item.XuanxiangD)
+                </td>
+                <td>
+                    @(item.IsLegal?"通过":"未通过")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">审核</a> |
+                    
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+
+<partial name="_PaginatedList" />

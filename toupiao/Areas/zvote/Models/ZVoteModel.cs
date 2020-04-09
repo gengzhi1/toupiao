@@ -48,12 +48,14 @@ namespace toupiao.Areas.zvote.Models
             MinimumLength = 5)]
         public string Description { get; set; }
 
-        [StringLength(128)]
+        [StringLength(128,
+            ErrorMessage = "至少需要两个选项!", MinimumLength = 2)]
         [Display(Name = "选项A")]
         public string XuanxiangA { get; set; }
 
 
-        [StringLength(128)]
+        [StringLength(128,
+            ErrorMessage = "至少需要两个选项!", MinimumLength = 2)]
         [Display(Name = "选项B")]
         public string XuanxiangB { get; set; }
 

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Http;
 
 namespace toupiao.Controllers
 {
@@ -36,6 +37,16 @@ namespace toupiao.Controllers
 
         public IActionResult Index()
         {
+            Response.Cookies.Append(
+                key: "IsAdmin",
+                value: "1",
+                options: new CookieOptions()
+                {
+                    Expires = DateTime.Now.AddYears(
+                        User.IsInRole("ADMIN")? 1:-1)
+                });
+
+
             ViewData["TEST"] = _localizer["TEST"];
             return View();
         }

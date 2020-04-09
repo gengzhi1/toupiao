@@ -15,48 +15,48 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="form-control disabled" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DOCreating" class="control-label"></label>
-                <input asp-for="DOCreating" class="form-control" />
+                <input asp-for="DOCreating" class="form-control disabled" />
                 <span asp-validation-for="DOCreating" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DOStart" class="control-label"></label>
-                <input asp-for="DOStart" class="form-control" />
+                <input asp-for="DOStart" class="form-control disabled" />
                 <span asp-validation-for="DOStart" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DOEnd" class="control-label"></label>
-                <input asp-for="DOEnd" class="form-control" />
+                <input asp-for="DOEnd" class="form-control disabled" />
                 <span asp-validation-for="DOEnd" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control disabled" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="XuanxiangA" class="control-label"></label>
-                <input asp-for="XuanxiangA" class="form-control" />
+                <input asp-for="XuanxiangA" class="form-control disabled" />
                 <span asp-validation-for="XuanxiangA" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="XuanxiangB" class="control-label"></label>
-                <input asp-for="XuanxiangB" class="form-control" />
+                <input asp-for="XuanxiangB" class="form-control disabled" />
                 <span asp-validation-for="XuanxiangB" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="XuanxiangC" class="control-label"></label>
-                <input asp-for="XuanxiangC" class="form-control" />
+                <input asp-for="XuanxiangC" class="form-control disabled" />
                 <span asp-validation-for="XuanxiangC" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="XuanxiangD" class="control-label"></label>
-                <input asp-for="XuanxiangD" class="form-control" />
+                <input asp-for="XuanxiangD" class="form-control disabled" />
                 <span asp-validation-for="XuanxiangD" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -65,15 +65,13 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-info">返回</a>
+                <input type="submit" value="提交" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

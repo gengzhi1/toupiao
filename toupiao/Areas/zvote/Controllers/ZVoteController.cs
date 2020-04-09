@@ -43,7 +43,7 @@ namespace toupiao.Areas.zvote.Controllers
         {
 
             var _user = await _userManager.GetUserAsync(User);
-            
+
             var _zVote = await PaginatedList<ZVote>.CreateAsync(
                 _context.ZVote.Where(
                     p=>
@@ -57,7 +57,6 @@ namespace toupiao.Areas.zvote.Controllers
                 pageNumber , 
                 pageSize,
                 ViewData);
-
 
             return View( _zVote );
         }
@@ -127,6 +126,34 @@ namespace toupiao.Areas.zvote.Controllers
 
             if (ModelState.IsValid)
             {
+                if (zVote.Title == null || zVote.Title?.Length < 1)
+                {
+                    ModelState.AddModelError(
+                        nameof(zVote.Title),
+                    "请添加一个标题!!");
+                    return View(zVote);
+                }
+                if (zVote.Description == null || zVote.Description?.Length < 1)
+                {
+                    ModelState.AddModelError(
+                        nameof(zVote.Description),
+                    "请添加一个描述!!"); 
+                    return View(zVote);
+                }
+                if (zVote.XuanxiangA == null || zVote.XuanxiangA?.Length < 1)
+                {
+                    ModelState.AddModelError(
+                        nameof(zVote.XuanxiangA),
+                    "选项A和选项B要填写!");
+                    return View(zVote);
+                }
+                if (zVote.XuanxiangB== null || zVote.XuanxiangB?.Length < 1)
+                {
+                    ModelState.AddModelError(
+                        nameof(zVote.XuanxiangB),
+                    "选项A和选项B要填写!");
+                    return View(zVote);
+                }
 
                 zVote.Submitter = await _userManager.GetUserAsync(User);
                 zVote.DOCreating = DateTimeOffset.Now;
