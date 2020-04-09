@@ -80,7 +80,7 @@
         var is_view_all = $(event.currentTarget).data("view_all");
         var url_params = new URLSearchParams(location.search);
         url_params.append('ViewAll', is_view_all);
-        location.href = location.pathname + '/' + url_params.toString();
+        location.href = location.pathname + '?' + url_params.toString();
     });
 </script>
 }
