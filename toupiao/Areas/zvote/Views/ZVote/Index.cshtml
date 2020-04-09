@@ -16,7 +16,7 @@
     <a asp-action="Create">开始新的投票</a>
 </p>
 
-<div class="col col-12 text-right">
+<div class="col col-12 text-left">
     <a data-view_all="1" class=" view-all btn btn-info @(IsViewAll?"disabled":"") " >
         所有投票</a>
     <a data-view_all="0" 
@@ -78,9 +78,11 @@
 <script>
     $(document).on('click', '.view-all', (event) => {
         var is_view_all = $(event.currentTarget).data("view_all");
-        var url_params = new URLSearchParams(location.search);
+        var url_params = new URLSearchParams( location.search );
         url_params.append('ViewAll', is_view_all);
-        location.href = location.pathname + '?' + url_params.toString();
+        location.href = updateQueryStringParameter(
+            location.href, 'ViewAll', is_view_all)
+        // location.pathname + '?' + url_params.toString();
     });
 </script>
 }
