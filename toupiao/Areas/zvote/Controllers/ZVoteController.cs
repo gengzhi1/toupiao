@@ -39,6 +39,7 @@ namespace toupiao.Areas.zvote.Controllers
         public async Task<IActionResult> Index(
             int pageNumber=1,
             int pageSize=10,
+            bool ViewAll = true,
             string kw="")
         {
 
@@ -47,6 +48,7 @@ namespace toupiao.Areas.zvote.Controllers
             var _zVote = await PaginatedList<ZVote>.CreateAsync(
                 _context.ZVote.Where(
                     p=>
+                        ViewAll?true:(p.Submitter == User.Identity) && 
                         (kw.Length<1?
                             true:
                             (p.Submitter.UserName.Contains(kw) ||

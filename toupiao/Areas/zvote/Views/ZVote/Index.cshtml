@@ -6,6 +6,8 @@
 @{
     ViewData["Title"] = "Index";
     var _pageIndex = Model.PageIndex ;
+    var IsViewAll = Context.Request.Query.FirstOrDefault(
+        p => p.Key.ToLower() == "viewall").Value == "1" ;
 }
 
 
@@ -13,6 +15,13 @@
 <p>
     <a asp-action="Create">开始新的投票</a>
 </p>
+
+<div class="col col-12 text-right">
+    <a asp-route-viewAll="1" class="btn btn-info @(IsViewAll?"disabled":"")" >
+        所有投票</a>
+    <a asp-route-viewAll="0" 
+       class="btn btn-primary @(IsViewAll?"":"disabled")">只看我的</a>
+</div>
 
 <div class="col col-3 float-right">
     <partial name="_IndexSearch" />
