@@ -21,8 +21,8 @@
 
 <div class="row">
     <div class="col col-12 text-center">
-        <a asp-route-pageNumber="@(PageIndex - 1)"
-           class="btn btn-outline-primary @prevDisabled">
+        <a  data-pageNumber="@(PageIndex - 1)" 
+           class="btn btn-outline-primary prev-page @prevDisabled">
             上一页
         </a>
 
@@ -37,8 +37,8 @@
             </a>
         }
 
-        <a asp-route-pageNumber="@(PageIndex + 1)"
-           class="btn btn-outline-info @nextDisabled">
+        <a data-pageNumber="@(PageIndex + 1)"
+           class="btn btn-outline-info next-page @nextDisabled">
             下一页
         </a>
     </div>

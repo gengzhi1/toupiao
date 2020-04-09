@@ -48,7 +48,7 @@ namespace toupiao.Areas.zvote.Controllers
             var _zVote = await PaginatedList<ZVote>.CreateAsync(
                 _context.ZVote.Where(
                     p=>
-                        (ViewAll == 1?true:(p.Submitter == _user)) && 
+                        (ViewAll == 1?p.IsLegal:(p.Submitter == _user )) && 
                         (kw.Length<1?
                             true:
                             (p.Submitter.UserName.Contains(kw) ||
