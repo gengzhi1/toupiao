@@ -8,6 +8,7 @@
     var _pageIndex = Model.PageIndex ;
     var IsViewAll = Context.Request.Query.FirstOrDefault(
         p => p.Key.ToLower() == "viewall").Value == "1" ;
+    var IndexStart = Convert.ToInt32(ViewData["IndexStart"]);
 }
 
 
@@ -44,7 +45,7 @@
         {
         <tr>
             <td>
-                @( _pageIndex++ )
+                @( IndexStart++ )
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)

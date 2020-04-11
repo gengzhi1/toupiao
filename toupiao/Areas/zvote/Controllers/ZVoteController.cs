@@ -58,7 +58,7 @@ namespace toupiao.Areas.zvote.Controllers
                 pageNumber , 
                 pageSize,
                 ViewData);
-
+            ViewData["IndexStart"] = pageSize * pageNumber - 9;
             return View( _zVote );
         }
 

@@ -37,6 +37,7 @@ namespace toupiao.Areas.Admin.Controllers
                     p =>
                         kw.Length < 1 ? true : (p.Title.Contains(kw) ||
                         p.Submitter.UserName.Contains(kw)))
+
                 .OrderByDescending(p => p.DOCreating)
                 .AsNoTracking(),
                 pageNumber,
