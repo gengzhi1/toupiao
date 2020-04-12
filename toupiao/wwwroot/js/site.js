@@ -22,9 +22,13 @@ function zlalert(message, alert_type = 'warning',timeout=4500 ) {
 }
 
 function updateQueryStringParameter(uri, key, value) {
+    uri = String(uri); key = String(key); value = String(value);
     var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-    if (uri.match(re)) {
+    var separator =String( uri).indexOf('?') !== -1 ? "&" : "?";
+    if (value.length < 1) {
+        return uri.replace(re, '$1', '');
+    }
+    else if (uri.match(re)) {
         return uri.replace(re, '$1' + key + "=" + value + '$2');
     }
     else {
@@ -32,15 +36,23 @@ function updateQueryStringParameter(uri, key, value) {
     }
 }
 
+
+function updateQueryStringParameters(uri, keyvalues) {
+
+    for (var key in keyvalues) {
+        uri = updateQueryStringParameter(uri, key, keyvalues[key] );
+    }
+    return uri;
+
+}
 // 即执行函数, 这里的代码会被直接运行
 (function () {
     $(document).on('click', '#index_search', (event) => {
         if ($('#index_search_input').val().length < 1) return;
-        var search_param = new URLSearchParams(location.search);
-        search_param.append('kw', $('#index_search_input').val());
-        location.href = updateQueryStringParameter(location.href,
-            'kw', $('#index_search_input').val())
-            // location.pathname+'?' + search_param.toString();
+
+        location.href = updateQueryStringParameter(
+            location.href,
+            'kw', $('#index_search_input').val());
     });
 
     $(document).on('click', '.to-page', (event) => {

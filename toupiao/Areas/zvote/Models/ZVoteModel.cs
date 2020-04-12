@@ -40,7 +40,7 @@ namespace toupiao.Areas.zvote.Models
 
         [Display(Name = "创建者")]
         public IdentityUser Submitter { get; set; }
-
+        public String SubmitterId { get; set; }
 
         [Display(Name = "描述")]
         [StringLength(256,

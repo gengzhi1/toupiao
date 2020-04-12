@@ -35,6 +35,9 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "用户名")]
+            public string UserName { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
@@ -46,7 +49,8 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                UserName = userName
             };
         }
 
@@ -86,7 +90,19 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
+            var userName = await _userManager.GetUserNameAsync(user);
+            if (Input.UserName != userName)
+            {
+                var setUserNameResult = await _userManager.SetUserNameAsync(
+                    user, Input.UserName);
 
+                if (!setUserNameResult.Succeeded)
+                {
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    throw new InvalidOperationException(
+                        $"更改用户名时出错,用户ID:'{userId}'.");
+                }
+            }
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

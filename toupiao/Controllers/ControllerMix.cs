@@ -90,11 +90,12 @@ namespace toupiao.Controllers
             int count, 
             int pageIndex, 
             int pageSize,
-            ViewDataDictionary viewData)
+            ViewDataDictionary viewData,
+            int totalPages)
         {
+            TotalPages = totalPages;
             PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            
+
             viewData.Add(nameof(PageIndex), pageIndex);
             viewData.Add(nameof(TotalPages),TotalPages );
             viewData.Add(nameof(HasPreviousPage), HasPreviousPage);
@@ -115,10 +116,17 @@ namespace toupiao.Controllers
             ViewDataDictionary viewData)
         {
             var count = await source.CountAsync();
+
+            var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+
+            // 以页数参数大于总页数的话页数参数设为总页数
+            pageIndex = totalPages >= pageIndex ? pageIndex : totalPages;
+            
             var items = await source.Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize).ToListAsync();
-            
-            return new PaginatedList<T>(items, count, pageIndex, pageSize, viewData);
+
+            return new PaginatedList<T>(items, count, pageIndex, 
+                pageSize, viewData, totalPages);
         }
     }
 }
