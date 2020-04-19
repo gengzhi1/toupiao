@@ -79,7 +79,7 @@ namespace toupiao.Controllers
             }
         }
     }
-
+    // https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/sort-filter-page?view=aspnetcore-3.1#add-paging-to-index-method
     public class PaginatedList<T> : List<T>
     {
         public int PageIndex { get; private set; }
@@ -120,9 +120,9 @@ namespace toupiao.Controllers
             var totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
             // 以页数参数大于总页数的话页数参数设为总页数
-            pageIndex = totalPages >= pageIndex ? pageIndex : totalPages;
+            pageIndex =  pageIndex >= totalPages ?  totalPages : pageIndex ;
             
-            var items = await source.Skip((pageIndex - 1) * pageSize)
+            var items = await source.Skip(     (pageIndex - 1) * pageSize  )
                 .Take(pageSize).ToListAsync();
 
             return new PaginatedList<T>(items, count, pageIndex, 

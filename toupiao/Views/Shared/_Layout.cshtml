@@ -21,7 +21,6 @@
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home"
                    asp-action="Index">
-                    @Localizer["藏林投票"]
                 </a>
 
                 <button class="navbar-toggler" type="button"
@@ -71,14 +70,7 @@
                                         用户管理</a>
                                 </div>
                             </li>
-                        }
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area=""
-                               asp-controller="Home" asp-action="Privacy">
-                                @Localizer["隐私"]
-                            </a>
-                        </li>
+                        }                      
                     </ul>
                 </div>
             </div>
@@ -92,11 +84,8 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - @Localizer["藏林投票"] -
-            <a asp-area="" asp-controller="Home"
-               asp-action="Privacy">
-                @Localizer["隐私政策"]
-            </a>
+            &copy; 2020 - @Localizer["你的到来荣幸之至！"] 
+         
 
         </div>
     </footer>

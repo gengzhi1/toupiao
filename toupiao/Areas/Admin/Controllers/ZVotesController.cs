@@ -28,17 +28,20 @@ namespace toupiao.Areas.Admin.Controllers
         public async Task<IActionResult> Index(
             int pageNumber = 1,
             int pageSize = 10,
+            // key word 关键词搜索
             string kw="")
         {
 
-
+            //关键词搜索代码（标题和创建者）
             var _zVotes = await PaginatedList<ZVote>.CreateAsync(
+                // _context 数据库上下文
                 _context.ZVote.Where(
                     p =>
                         kw.Length < 1 ? true : (p.Title.Contains(kw) ||
                         p.Submitter.UserName.Contains(kw)))
 
                 .OrderByDescending(p => p.DOCreating)
+                // 纯查询
                 .AsNoTracking(),
                 pageNumber,
                 pageSize,
