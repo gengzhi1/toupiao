@@ -35,18 +35,10 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
         {
             [Required(ErrorMessage ="{0}必填哦！")]
             [DataType(DataType.Password)]
-<<<<<<< HEAD
-            [Display(Name = "当前密码")]           
-            public string OldPassword { get; set; }
-
-            [Required(ErrorMessage = "{0}必填哦！")]
-=======
             [Display(Name = "当前密码")]
-           
-            public string OldPassword { get; set; }
+           public string OldPassword { get; set; }
 
-            [Required]
->>>>>>> 3c7579a289008a0794ec09ef4b6193637b41bbd9
+            [Required(ErrorMessage ="必填项！")]
             [StringLength(100, ErrorMessage = "密码至少为6位，且包含字符！", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "新密码")]

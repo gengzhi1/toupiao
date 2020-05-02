@@ -10,6 +10,8 @@
     var IsViewAll = Context.Request.Query.FirstOrDefault(
         p => p.Key.ToLower() == "viewall").Value == "1";
     var IndexStart = Convert.ToInt32(ViewData["IndexStart"]);
+
+    var _userid = (await UserManager.GetUserAsync(User)).Id;
 }
 
 
@@ -70,10 +72,25 @@
                     @( item.DOEnd.LocalDateTime.Date.ToShortDateString())
                 </td>
                 <td>
+                    @{/*
+                    <a class="copy_zvote_url btn btn-info"  
+                       data-clipboard-text="@(Context.Request.Scheme)@(Url.Action("Details"))/@(item.Id)" >
+                        复制链接</a>
+                    */}
+                    @if (item.SubmitterId == _userid)
+                    {
 
-                    <a asp-action="Edit" asp-route-id="@item.Id">更改</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">投票</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id">更改</a>
+                        <span>|</span>
+                    }
+
+                    <a asp-action="Details" asp-route-id="@item.Id">投票</a>
+
+                    @if (item.SubmitterId == _userid)
+                    {
+                        <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                    }
                 </td>
             </tr>
         }
@@ -86,8 +103,13 @@
 {
 
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/node_modules/clipboard/dist/clipboard.min.js"></script>
     <script>
+        var clipboard = new ClipboardJS('.copy_zvote_url');
 
+        clipboard.on('success', function (e) {
+            zlalert("复制成功！ 快去分享吧！")    
+        });
 
         $(document).on('click', '.view-all', (event) => {
             var is_view_all = $(event.currentTarget).data("view_all");
