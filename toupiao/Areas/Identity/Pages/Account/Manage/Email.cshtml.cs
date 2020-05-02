@@ -31,7 +31,15 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
-        public string Email { get; set; }
+      
+       [Required]
+       [EmailAddress]
+       [Display(Name = "邮箱")]
+       public string Email { get; set; }
+
+
+       
+        
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -45,7 +53,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
         {
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "更改邮箱地址")]
             public string NewEmail { get; set; }
         }
 
@@ -67,7 +75,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"加载不了用户 '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -79,7 +87,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"加载不了用户 '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -101,13 +109,13 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"请确认您的帐户 <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "请查收邮件.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "您的电子邮件没有变化。";
             return RedirectToPage();
         }
 
@@ -116,7 +124,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"加载不了用户 '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -137,9 +145,9 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             await _emailSender.SendEmailAsync(
                 email,
                 "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                $"请确认您的帐户 <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "验证邮件发送。请查收邮件。";
             return RedirectToPage();
         }
     }

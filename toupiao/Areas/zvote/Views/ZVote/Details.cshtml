@@ -18,9 +18,10 @@
 </div>
 <h5>
     @(
-    Model.DOEnd < DateTimeOffset.Now ? "投票结束":
-    Model.DOStart <= DateTimeOffset.Now?
-        "投票未开始":"参与投票!" )
+        Model.DOEnd < DateTimeOffset.Now ? "投票结束":
+        Model.DOStart <= DateTimeOffset.Now?
+            "参与投票!":"投票未开始"
+    )
 </h5>
 
 <div class="col col-12 text-center">

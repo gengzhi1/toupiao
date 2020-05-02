@@ -221,13 +221,16 @@ namespace toupiao.Areas.zvote.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
+                { 
                     if (zVote.CoverImage != null)
                     {
                         zVote.CoverPath = await ControllerMix.SaveFormFileAsync(
                             zVote.CoverImage, _env, ModelState,
                             nameof(zVote.CoverImage));
                     }
+                    var _user = await _userManager.GetUserAsync(User);
+                    zVote.SubmitterId = _user.Id;
+                    zVote.Submitter = _user;
 
                     _context.Update(zVote);
                     await _context.SaveChangesAsync();

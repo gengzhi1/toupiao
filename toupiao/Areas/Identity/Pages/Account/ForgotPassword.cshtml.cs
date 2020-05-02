@@ -41,8 +41,8 @@ namespace toupiao.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage ="{0} 是必填项")]
+            [EmailAddress( ErrorMessage ="请输入邮箱地址" )]
             [Display(Name = "邮箱")]
             public string Email { get; set; }
         }

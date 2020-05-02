@@ -62,8 +62,8 @@ namespace toupiao.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "请输入邮箱")]
+            [EmailAddress(ErrorMessage ="请输入有效的邮箱")]
             [Display(Name ="邮箱")]
             public string Email { get; set; }
 
@@ -105,6 +105,7 @@ namespace toupiao.Areas.Identity.Pages.Account
                 {
                     return RedirectToPage("Register", new { IsFromLogin = true, returnUrl });
                 }
+
                 if (!await _userManager.IsEmailConfirmedAsync(_user))
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(_user);
@@ -119,16 +120,25 @@ namespace toupiao.Areas.Identity.Pages.Account
                     await ToupiaoEmailSender.SendEmailAnync(
                         _configuration,
                         Input.Email, 
-                        _localizer["Confirm your email"],
-                        _localizer["Please confirm your account by"]+" <a href='" + HtmlEncoder.Default.Encode(callbackUrl) +"'>"+_localizer["clicking here"]+"</a>");
-                    ModelState.AddModelError(string.Empty, _localizer["We have sent a confirmation email to you, you can login after confirming it"]);
+                        _localizer["确认你的电子邮件"],
+                        _localizer["请确认您的帐户"] +" <a href='" + HtmlEncoder.Default.Encode(callbackUrl) +"'>"+_localizer["点击这里"] +"</a>");
+                    ModelState.AddModelError(string.Empty, _localizer["邮件已发送！请确认后可以登录"]);
                     return Page();
                 }
+
+                // 通过邮箱来获取用户名
+                var _UserName = _userManager.FindByEmailAsync(Input.Email)
+                    .GetAwaiter().GetResult().UserName;
 
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(
+                    _UserName, 
+                    Input.Password, 
+                    Input.RememberMe, 
+                    lockoutOnFailure: false);
+                
                 // 登录成功
                 if (result.Succeeded)
                 {
@@ -188,12 +198,12 @@ namespace toupiao.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("用户帐户被锁定。");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "账号或者密码错误！");
                     return Page();
                 }
             }

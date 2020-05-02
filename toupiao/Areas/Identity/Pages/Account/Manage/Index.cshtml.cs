@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using toupiao.Data;
 
 namespace toupiao.Areas.Identity.Pages.Account.Manage
 {
@@ -14,12 +16,18 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
+        private readonly ApplicationDbContext _context;
+
+
         public IndexModel(
+            ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+
         }
 
         public string Username { get; set; }
@@ -33,7 +41,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "联系电话")]
             public string PhoneNumber { get; set; }
 
             [Display(Name = "用户名")]
@@ -59,7 +67,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"加载不了用户'{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -71,7 +79,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"加载不了用户 '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -87,9 +95,19 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
                 if (!setPhoneResult.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    throw new InvalidOperationException($"设置用户电话号码时发生错误 '{userId}'.");
                 }
             }
+
+            // 用户唯一
+            if( await _context.Users.AnyAsync( p=>p.UserName == Input.UserName) )
+            {
+                ModelState.AddModelError(
+                    nameof(Input.UserName),
+                    "该用户名已存在！");
+            }
+
+
             var userName = await _userManager.GetUserNameAsync(user);
             if (Input.UserName != userName)
             {
@@ -104,7 +122,7 @@ namespace toupiao.Areas.Identity.Pages.Account.Manage
                 }
             }
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "资料已经更新！";
             return RedirectToPage();
         }
     }

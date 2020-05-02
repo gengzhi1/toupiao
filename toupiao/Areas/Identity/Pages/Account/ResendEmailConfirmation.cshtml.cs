@@ -10,19 +10,35 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using toupiao.Services;
 
 namespace toupiao.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public abstract class ResendEmailConfirmationModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IEmailSender _emailSender;
 
-        public ResendEmailConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<RegisterModel> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly IStringLocalizer<Program> _localizer;
+
+        public ResendEmailConfirmationModel(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            IConfiguration configuration,
+            IStringLocalizer<Program> localizer,
+            ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
+            _signInManager = signInManager;
+            _logger = logger;
+            _configuration = configuration;
+            _localizer = localizer;
         }
 
         [BindProperty]
@@ -35,8 +51,11 @@ namespace toupiao.Areas.Identity.Pages.Account
             public string Email { get; set; }
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+
+            Input = new InputModel{ }; 
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -59,9 +78,10 @@ namespace toupiao.Areas.Identity.Pages.Account
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { userId = userId, code = code },
+                values: new { userId,  code },
                 protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
+            await ToupiaoEmailSender.SendEmailAnync(
+                _configuration,
                 Input.Email,
                 "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");

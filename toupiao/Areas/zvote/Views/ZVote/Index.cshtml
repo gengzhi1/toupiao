@@ -54,8 +54,12 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
 
-                <td>@(  (await UserManager.FindByIdAsync(item.SubmitterId))
-                    .UserName )</td>
+                <td>
+                    @(  
+                        (await UserManager.FindByIdAsync(item.SubmitterId))
+                            .UserName 
+                    )
+                </td>
                 <td>
                     @(item.DOCreating.LocalDateTime)
                 </td>

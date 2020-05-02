@@ -42,9 +42,12 @@
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">没有账号? 去注册</a>
                     </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">已注册! 再次验证</a>
-                    </p>
+                    @{ /*
+                      <p>
+                          <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">已注册! 再次验证</a>
+                      </p>
+                      */}
+
                 </div>
             </form>
         </section>

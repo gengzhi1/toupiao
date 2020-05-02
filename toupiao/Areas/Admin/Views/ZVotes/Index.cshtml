@@ -56,15 +56,14 @@
                 <td>
                     @(item.Title)
                 </td>
-                <td>
-                    @(item.DOCreating
-                        .LocalDateTime.Date.ToShortDateString())
+                <td>                   
+                    @(item.DOCreating.LocalDateTime)
                 </td>
                 <td>
                     @(item.DOStart?.LocalDateTime.Date.ToShortDateString())
                 </td>
                 <td>
-                    @( item.DOEnd)
+                    @( item.DOEnd.Date.ToShortDateString())
                 </td>
 
                 <td>

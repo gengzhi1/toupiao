@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,28 +18,38 @@ namespace toupiao.Areas.Admin.Controllers
     [Authorize(Roles = "ADMIN")]
     public class ZVotesController : Controller
     {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
 
-        public ZVotesController(ApplicationDbContext context)
+        public ZVotesController(
+            RoleManager<IdentityRole> roleManager,
+            UserManager<IdentityUser> userManager,
+            ApplicationDbContext context)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: Admin/ZVotes
         public async Task<IActionResult> Index(
             int pageNumber = 1,
             int pageSize = 10,
+            // key word 关键词搜索
             string kw="")
         {
 
-
+            //关键词搜索代码（标题和创建者）
             var _zVotes = await PaginatedList<ZVote>.CreateAsync(
+                // _context 数据库上下文
                 _context.ZVote.Where(
                     p =>
                         kw.Length < 1 ? true : (p.Title.Contains(kw) ||
                         p.Submitter.UserName.Contains(kw)))
 
                 .OrderByDescending(p => p.DOCreating)
+                // 纯查询
                 .AsNoTracking(),
                 pageNumber,
                 pageSize,
@@ -171,6 +182,19 @@ namespace toupiao.Areas.Admin.Controllers
             _context.ZVote.Remove(zVote);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> DeleteNoConfirmed(Guid id)
+        {
+            var _user = await _userManager.GetUserAsync(User);
+            if( !await _userManager.IsInRoleAsync(_user, "ADMIN") )
+            {
+                return BadRequest();
+            }
+
+            var zVote = await _context.ZVote.FindAsync(id);
+            _context.ZVote.Remove(zVote);
+            await _context.SaveChangesAsync();
+            return Ok(1);
         }
 
         private bool ZVoteExists(Guid id)
