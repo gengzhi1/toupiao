@@ -120,9 +120,13 @@ namespace toupiao.Controllers
             var totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
             // 以页数参数大于总页数的话页数参数设为总页数
-            pageIndex =  pageIndex >= totalPages ?  totalPages : pageIndex ;
+            pageIndex = 
+                    // 防止页数出现负值出现异常
+                  totalPages <1 ? 1
+                : pageIndex >= totalPages ?  totalPages 
+                : pageIndex ;
             
-            var items = await source.Skip(     (pageIndex - 1) * pageSize  )
+            var items = await source.Skip(     (pageIndex - 1) * pageSize   )
                 .Take(pageSize).ToListAsync();
 
             return new PaginatedList<T>(items, count, pageIndex, 
